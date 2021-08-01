@@ -15,6 +15,9 @@
 #define   WATER_LEVEL_SAMPLES_COUNT                         20
 #define   WATER_LEVEL_READING_INTERVAL_MS                   1000
 
+#define   READING_FREQUENCY                      1000   //in milli sec
+#define   READING_FREQUENCY_SIGNAL_DEBUG         300    //in milli sec
+
 #define   ALERT_TYPE_NA       "-"
 #define   ALERT_TYPE_H1       "H1"
 #define   ALERT_TYPE_H2       "H2"
@@ -35,28 +38,39 @@ bool wasAboveEmptyLeve2 = false;
 //*****************************************************************************
 // Called from timer, ensure to keep simple logic
 // avoid String operations, delays, times, etc...
-// Update only volatile global variables...
+// Update only volatile global variables...  delay() does not work here
 // 
 // Using timer to ensure signal reading frequency is not affected by random 
 // delays due to wifi, BT, etc.
 //*****************************************************************************
 void timerHandler_waterLevelRead(){
   static int lastValue = -1;
-  int sum = 0;                    
-  unsigned char sample_count = 0;
+  static unsigned long sum = 0;
+  static int sample_count = 0;
 
-  if (isDebugModeRawSignal()){
-    sum = analogRead(A0) * WATER_LEVEL_SAMPLES_COUNT;  //read raw signal, no sampling and averating
+  if (!startWaterReading)  return;  //device still initiating, wait....
+
+  
+  
+  //------ reading sampling stage -----------------------------------------------  
+  if (sample_count < WATER_LEVEL_SAMPLES_COUNT){            
+      if (sample_count >= 0){
+          if (isDebugModeRawSignal())
+              sum = analogRead(A0) * WATER_LEVEL_SAMPLES_COUNT;  //read raw signal, no sampling and averating
+          else
+              sum += analogRead(A0);
+      }
+      else{
+          //wait state...
+      }
+          
+      //delay (10);  // delay does not work in this timer function, hence using state machine like logic
+      
+      sample_count++;
+      return;
   }
-  else{
-    // take a number of analog samples and add them up
-    while (sample_count < WATER_LEVEL_SAMPLES_COUNT) {
-        sum += analogRead(A0);     //TODO if value is very different than avg read, ignore it, i.e. noise reduction
-        sample_count++;
-        delay(10);
-    }
-  }
-    
+
+  //------ reading sampling done  -----------------------------------------------
   waterLevelSignalValue = sum / WATER_LEVEL_SAMPLES_COUNT;
   if (waterLevelSignalValueEMA == -1)
     waterLevelSignalValueEMA = waterLevelSignalValue;  //first time initiation
@@ -71,7 +85,10 @@ void timerHandler_waterLevelRead(){
   //round to single decimal place
   waterLevelSignalValueEMA = round (waterLevelSignalValueEMA * 10.0) / 10.0;
   waterLevelPercentageEMA  = round (waterLevelPercentageEMA  * 10.0) / 10.0;
-  
+
+  sum = 0;
+  sample_count = 0 - (( (isDebugModeRawSignal() ? READING_FREQUENCY_SIGNAL_DEBUG : READING_FREQUENCY) / TIMER_FREQUENCY) - WATER_LEVEL_SAMPLES_COUNT);
+      
   
   checkIfDeltaThresholdJumped(lastValue);
   checkIfSafeRangeCrossed();
@@ -80,11 +97,11 @@ void timerHandler_waterLevelRead(){
   lastValue = waterLevelSignalValue;
   waterLevelReadingCount++;
   logLevels();  
-
-  //TODO: update LCD from here??? to have regular screen updates??
 }
 
 void logLevels(){
+  if (!isSerialDebugMessagingEnabled()) return;
+  
   print("=", 15);
   print(waterLevelPercentageEMA ); 
   print("/"); 

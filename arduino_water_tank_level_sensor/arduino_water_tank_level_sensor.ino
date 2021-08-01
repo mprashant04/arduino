@@ -123,6 +123,8 @@
 
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, 20, 4); 
 
+void(* resetFunc) (void) = 0;//declare reset function at address 0
+
 
 // was not able to use 2 software serials (BT and wifi) at once, hence connected BT to tx/rx pins and using as inbuilt serial. Can flip between tx/rx ping and 16-17 pins by using jumpers on board
 // after changing jumper comment/uncomment folloing #define appropriately
@@ -144,9 +146,6 @@ int wifi_CommandSuccessCount;
 
 
 void setup() {    
-  initTimers();
-  initToneTimer();
-  
   if (BT_CONNECTED_TO_SERIAL_PINS == false)   Serial.begin(9600);  
 
   // have changed baud rate of HC05 module i am using now on board, to 57600 using AT commands (e.g. ref- https://www.instructables.com/Changing-Baud-Rate-of-HC-05-Bluetooth/)
@@ -157,16 +156,17 @@ void setup() {
   BTserial.begin(57600); //(38400); 
   esp8266.begin(115200);      
 
+  initTimers();  //tones will work only after this...
+
   print("#", 30); 
   debugInit();
   
   pinMode(WIFI_RESET, OUTPUT);
-  lcdInit();    
+  lcdInit();
     
   lcdWelcomeMessage();  
 
-  
-  initWaterReadingTimer();   //start times only after initiation is complete.... e.g. capacitor charging delay, etc.
+  startWaterReading = true;
   waitTillFirstWaterSignalRead();  
 }
 
@@ -187,7 +187,7 @@ void loop() {
 }
 
 void scheduledReboot(){
-  if (getUptimeInHours() >= REBOOT_INTERVAL_HOURS)    
+  if (getUptimeInHours() >= REBOOT_INTERVAL_HOURS)
       reboot();
 }
 

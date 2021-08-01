@@ -66,7 +66,7 @@ void playTone(char type, int repeatCount, int num, ...){
 //*****************************************************************************
 // Called from timer, ensure to keep simple logic
 // avoid String operations, delays, times, etc...
-// Update only volatile global variables...
+// Update only volatile global variables...  delay() does not work here
 // 
 // Using timer allow non-blocking custom audio alerts
 //*****************************************************************************

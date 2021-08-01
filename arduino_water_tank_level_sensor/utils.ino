@@ -11,6 +11,8 @@ void reboot(){
   //UPDATE: did not work, makes arduino unstable many times, think alternate way  
   //    String data  = "some garbage";
   //    reboot();  
+
+  resetFunc();
 }
 
 String centerAlign(String msg, int width){
