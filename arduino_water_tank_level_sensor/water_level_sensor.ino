@@ -23,7 +23,7 @@
 
 // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
 // EMA alpha factor, between 0 and 1. Finetune as needed. Lower the value, more samples will be used for averaging, i.e. slower response
-#define   EMA_a                         0.03
+#define   EMA_a                         0.05
 
 unsigned long levelAlertStartedOn = UNSIGNED_LONG_MAX;
 
@@ -108,9 +108,9 @@ void checkIfDeltaThresholdJumped(int lastValue){
       if (abs(lastValue - waterLevelSignalValue) >= WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_LARGE){    
           waterLevelSignalThresholdJumpCount_Large ++;
           if (isDebugModeRawSignal())
-            playLoudTone(150);      //todo move tones to main looop() ??
+            playTone(TONE_SINGLE, 0, 150, TONE_ARG_EOL);      //todo move tones to main looop() ??
           else
-            playLoudToneRepeated(400, 150, 10); 
+            playTone(TONE_REPEAT, 4, 400, 150, TONE_ARG_EOL);
       }
       else if (abs(lastValue - waterLevelSignalValue) >= WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_SMALL){    
           waterLevelSignalThresholdJumpCount_Small ++;          
@@ -170,10 +170,10 @@ void playTankLevelAlert(String type){
   }
 
   if (type == ALERT_TYPE_H1){
-      playLoudTone(100); 
+      //playLoudTone(100); 
   }
   else if (type == ALERT_TYPE_H1){
-      playLoudTone(100,50,100); 
+      //playLoudTone(100,50,100); 
   }
   //TODO pending for low
 }

@@ -132,7 +132,7 @@ void lcdTransientMessageClear(){
 
 void lcdWelcomeMessage(){    
   lcdPrint("INITIATING...", 4, 1);  
-  playLoudTone(150);  
+  playTone(TONE_SINGLE, 0, 150, TONE_ARG_EOL); 
   
   for (int i = 20; i > 0 ; i--){
     lcdPrint(String (i) + "     ", 9, 3);

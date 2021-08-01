@@ -1,151 +1,13 @@
-/*************************************************
-
- * Public Constants
-
- *************************************************/
-
-#define NOTE_B0  31
-#define NOTE_C1  33
-#define NOTE_CS1 35
-#define NOTE_D1  37
-#define NOTE_DS1 39
-#define NOTE_E1  41
-#define NOTE_F1  44
-#define NOTE_FS1 46
-#define NOTE_G1  49
-#define NOTE_GS1 52
-#define NOTE_A1  55
-#define NOTE_AS1 58
-#define NOTE_B1  62
-#define NOTE_C2  65
-#define NOTE_CS2 69
-#define NOTE_D2  73
-#define NOTE_DS2 78
-#define NOTE_E2  82
-#define NOTE_F2  87
-#define NOTE_FS2 93
-#define NOTE_G2  98
-#define NOTE_GS2 104
-#define NOTE_A2  110
-#define NOTE_AS2 117
-#define NOTE_B2  123
-#define NOTE_C3  131
-#define NOTE_CS3 139
-#define NOTE_D3  147
-#define NOTE_DS3 156
-#define NOTE_E3  165
-#define NOTE_F3  175
-#define NOTE_FS3 185
-#define NOTE_G3  196
-#define NOTE_GS3 208
-#define NOTE_A3  220
-#define NOTE_AS3 233
-#define NOTE_B3  247
-#define NOTE_C4  262
-#define NOTE_CS4 277
-#define NOTE_D4  294
-#define NOTE_DS4 311
-#define NOTE_E4  330
-#define NOTE_F4  349
-#define NOTE_FS4 370
-#define NOTE_G4  392
-#define NOTE_GS4 415
-#define NOTE_A4  440
-#define NOTE_AS4 466
-#define NOTE_B4  494
-#define NOTE_C5  523
-#define NOTE_CS5 554
-#define NOTE_D5  587
-#define NOTE_DS5 622
-#define NOTE_E5  659
-#define NOTE_F5  698
-#define NOTE_FS5 740
-#define NOTE_G5  784
-#define NOTE_GS5 831
-#define NOTE_A5  880
-#define NOTE_AS5 932
-#define NOTE_B5  988
-#define NOTE_C6  1047
-#define NOTE_CS6 1109
-#define NOTE_D6  1175
-#define NOTE_DS6 1245
-#define NOTE_E6  1319
-#define NOTE_F6  1397
-#define NOTE_FS6 1480
-#define NOTE_G6  1568
-#define NOTE_GS6 1661
-#define NOTE_A6  1760
-#define NOTE_AS6 1865
-#define NOTE_B6  1976
-#define NOTE_C7  2093
-#define NOTE_CS7 2217
-#define NOTE_D7  2349
-#define NOTE_DS7 2489
-#define NOTE_E7  2637
-#define NOTE_F7  2794
-#define NOTE_FS7 2960
-#define NOTE_G7  3136
-#define NOTE_GS7 3322
-#define NOTE_A7  3520
-#define NOTE_AS7 3729
-#define NOTE_B7  3951
-#define NOTE_C8  4186
-#define NOTE_CS8 4435
-#define NOTE_D8  4699
-#define NOTE_DS8 4978
-
-#define BUZZER_PIN                        12
-#define BUZZER_LARGE_PIN                  9
-
-
-void playInit(){
-  pinMode(BUZZER_LARGE_PIN, OUTPUT);
-  pinMode(BUZZER_PIN, OUTPUT); 
-}
-
-void playLoudToneRepeated(int beep, int delayMillis, int repeations){
-  while (repeations-- > 0){
-      playLoudTone(beep);
-      delay(delayMillis);
-  }
-}
-
-void playLoudTone(int beep1, int delay1=0, int beep2=0, int delay2=0, int beep3=0, int delay3=0, int beep4=0){
-     digitalWrite(BUZZER_LARGE_PIN, HIGH);
-     delay (beep1);
-     digitalWrite(BUZZER_LARGE_PIN, LOW);
-     
-     if (beep2 == 0) return;
-     
-     delay(delay1);     
-     digitalWrite(BUZZER_LARGE_PIN, HIGH);
-     delay (beep2);
-     digitalWrite(BUZZER_LARGE_PIN, LOW);
-     
-     if (beep3 == 0) return;
-     
-     delay(delay2);     
-     digitalWrite(BUZZER_LARGE_PIN, HIGH);
-     delay (beep3);
-     digitalWrite(BUZZER_LARGE_PIN, LOW);     
-
-     if (beep4 == 0) return;
-     
-     delay(delay3);     
-     digitalWrite(BUZZER_LARGE_PIN, HIGH);
-     delay (beep4);
-     digitalWrite(BUZZER_LARGE_PIN, LOW);     
-}
 
 void playToneTest(){
     int j = 15;
     delay(4000);
-   while (j-- > 0){
+    while (j-- > 0){
 
       int del = 200;
 
-      playLoudToneRepeated(del,del,8);
-      delay (4000);
+      playTone(TONE_REPEAT, 8, del,del, TONE_ARG_EOL);      
+      delay (7000);
 
       for (int i = 0; i<8; i++){
         digitalWrite(BUZZER_PIN, HIGH);
@@ -158,6 +20,48 @@ void playToneTest(){
 }
 
 
+void playTone(char type, int repeatCount, int num, ...){  
+
+  //---------------------------
+  // if other blocking tone play in progress, discard current tone request 
+  if (   isToneTypeBlocking(toneType)       // last type was blocking type
+      && isTimerTonePlayInProgress()        // and it's still being played
+      && !isToneTypeBlocking(type)          // and new type not blocking type
+     ){      
+      return;
+  }
+  //---------------------------
+  
+  
+  va_list arguments;
+  va_start ( arguments, repeatCount );  
+
+  toneType = type;
+  tonesRepeatCount = repeatCount;
+  for (int i=0; i < TONES_ARR_SIZE; i++) tones[i] = 0;  //clear array
+    
+  //toneStartedOn = millis();
+  int idx = 0;   
+  
+  tones[idx++] = 1; //millis();
+  //int num = va_arg(arguments, int);
+  while (num > 0){      
+      if (idx >= TONES_ARR_SIZE){
+          //TODO halt("ERR_TMR_9");
+      }      
+  
+      tones[idx] = tones[idx-1] + num;
+      idx++;
+      num = va_arg(arguments, int);      
+  }  
+
+  va_end(arguments); 
+
+  tonesUpdateCount++;  //this is signal to timer to start tone...
+  
+  while(!isTimerTonePlayInProgress()){}  //return after tone play has started
+}
+
 
 //*****************************************************************************
 // Called from timer, ensure to keep simple logic
@@ -166,20 +70,68 @@ void playToneTest(){
 // 
 // Using timer allow non-blocking custom audio alerts
 //*****************************************************************************
-void timerHandler_buzzer()
-{
-  static bool toggle1 = false;
-  static bool started = false;
-  
- // waterLevelRead();  
+void timerHandler_buzzer(){    
+    static unsigned long toneStartedOn = millis();
+    static int idx = 0;
+    static int repeatCount = 0;
+    static boolean started = false;
 
-//  if (!started)
-//  {
-//    started = true;
-//    pinMode(outputPin, OUTPUT);
-//  }
-//  
-//  digitalWrite(outputPin, toggle1);
-//  toggle1 = !toggle1;
+    if (!started){
+        started = true;
+        pinMode(BUZZER_LARGE_PIN, OUTPUT);        
+    }
+    
+    if (isNewTimerBuzzerRequestReceived()){      
+        toneStartedOn = millis();
+        idx = 0;
+        repeatCount = tonesRepeatCount-1;                
+        tonePlayInProgress = true;
+    }
+    else if (idx > 0 && tones[idx] <= 0 ){
+        if (isToneTypeRepeating(toneType) && repeatCount > 0){
+            toneStartedOn = millis();
+            idx = 0;
+            repeatCount--;
+        }
+        else if (tonePlayInProgress){    
+            tonePlayInProgress = false;                          
+        }
+    }
 
+
+    if (tonePlayInProgress && tones[idx] > 0 && (tones[idx] + toneStartedOn) < millis()){
+        if (tones[idx+1] <= 0 && getBuzzerStatus(idx) == HIGH){
+          //skip. Unnecessary last element sent by calling function, preventing continuous ON signal after tone sequence finished                 
+        }
+        else{
+          digitalWrite(BUZZER_LARGE_PIN, getBuzzerStatus(idx));
+        }
+        idx++;
+    }  
+}
+
+boolean isToneTypeBlocking(char type){
+  return type == TONE_SINGLE_BLOCKING || type == TONE_REPEAT_BLOCKING;
+}
+
+boolean isToneTypeRepeating(char type){
+  return type == TONE_REPEAT || type == TONE_REPEAT_BLOCKING;
+}
+
+boolean getBuzzerStatus(int idx){
+  return idx%2==0 ? HIGH : LOW;
+}
+
+boolean isTimerTonePlayInProgress(){
+  return tonePlayInProgress;
+}
+
+boolean isNewTimerBuzzerRequestReceived(){
+    static char lastTonesUpdateCount = tonesUpdateCount;    
+        
+    if (lastTonesUpdateCount != tonesUpdateCount){
+        lastTonesUpdateCount = tonesUpdateCount; 
+        return true;
+    }
+    return false;
 }

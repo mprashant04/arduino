@@ -143,7 +143,10 @@ int wifi_CommandFailureCount;
 int wifi_CommandSuccessCount;
 
 
-void setup() {
+void setup() {    
+  initTimers();
+  initToneTimer();
+  
   if (BT_CONNECTED_TO_SERIAL_PINS == false)   Serial.begin(9600);  
 
   // have changed baud rate of HC05 module i am using now on board, to 57600 using AT commands (e.g. ref- https://www.instructables.com/Changing-Baud-Rate-of-HC-05-Bluetooth/)
@@ -152,17 +155,18 @@ void setup() {
   // **Update** after changing BT baud rate and connecting to serial tx/rx pins, wifi api call communciation became more stable, looks like earlier both BT and 
   //            wifi having high rate was causing some data loss for wifi. So win-win case
   BTserial.begin(57600); //(38400); 
-  esp8266.begin(115200);     
+  esp8266.begin(115200);      
 
+  print("#", 30); 
   debugInit();
-  playInit();
+  
   pinMode(WIFI_RESET, OUTPUT);
   lcdInit();    
     
   lcdWelcomeMessage();  
 
   
-  initTimers();   //start times only after initiation is complete.... e.g. capacitor charging delay, etc.
+  initWaterReadingTimer();   //start times only after initiation is complete.... e.g. capacitor charging delay, etc.
   waitTillFirstWaterSignalRead();  
 }
 

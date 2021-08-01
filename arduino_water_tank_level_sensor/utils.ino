@@ -25,7 +25,7 @@ String centerAlign(String msg, int width){
 void haltProgram(String lcdMessage){  
   lcdTransientMessage(lcdMessage);
   while (true){
-      playLoudTone(100,100,200);            
+      playTone(TONE_SINGLE, 0, 100,100,200, TONE_ARG_EOL);       
       delay(1000);
   }
 }

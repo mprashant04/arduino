@@ -19,15 +19,15 @@ void handleBluetoothCommands(){
         playCommandTone();
         playToneTest();
     }
-    else if (cmd.length() > 0){
-        playLoudTone(700);  
+    else if (cmd.length() > 0){        
+        playTone(TONE_SINGLE, 0, 700, TONE_ARG_EOL); 
         lcdTransientMessage(MSG_INVALID_BT_COMAND, 2000);
         println(MSG_INVALID_BT_COMAND + cmd);     
     }
 }
 
-void playCommandTone(){
-  playLoudTone(100,100,250); 
+void playCommandTone(){  
+    playTone(TONE_SINGLE, 0, 100,100,250, TONE_ARG_EOL); 
 }
 
 String readBluetoothCommand(){         

@@ -1,1 +1,17 @@
-void playLoudTone(int beep1, int delay1=0, int beep2=0, int delay2=0, int beep3=0, int delay3=0, int beep4=0);
+#define BUZZER_PIN                        12
+#define BUZZER_LARGE_PIN                  9
+
+
+#define TONE_SINGLE             's'    
+#define TONE_SINGLE_BLOCKING    'S'    //other tone requests will be discarded till this one is complete
+#define TONE_REPEAT             'r'
+#define TONE_REPEAT_BLOCKING    'R'    //other tone requests will be discarded till this one is complete
+
+
+#define TONE_ARG_EOL      -1
+#define TONES_ARR_SIZE    20
+volatile int      tones[TONES_ARR_SIZE];
+volatile char     toneType;
+volatile boolean  tonePlayInProgress = false;
+volatile char     tonesUpdateCount = 0;
+volatile int      tonesRepeatCount = 0;

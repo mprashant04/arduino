@@ -83,7 +83,7 @@ void thingSpeakSendData(){
             state = TS_START;
             break;
       default:
-            playLoudTone(400);
+            playTone(TONE_SINGLE, 0, 400, TONE_ARG_EOL); 
     
   }
 }  
@@ -96,12 +96,12 @@ void handleFailures(){
   
 
   if (thingSpeakConsecutiveFailureCount > 0){
-      if ( thingSpeakConsecutiveFailureCount % MAX_FAILURES_TO_RECONNECT == 0 ) {           
-          playLoudToneRepeated(180,80,5);
+      if ( thingSpeakConsecutiveFailureCount % MAX_FAILURES_TO_RECONNECT == 0 ) {                     
+          playTone(TONE_REPEAT, 5, 180,80, TONE_ARG_EOL);
           disconnectWifi();
       }
-      else if ( thingSpeakConsecutiveFailureCount % MAX_FAILURES_TO_WARN == 0 ) {          
-          playLoudToneRepeated(180,80,2);
+      else if ( thingSpeakConsecutiveFailureCount % MAX_FAILURES_TO_WARN == 0 ) {                    
+          playTone(TONE_SINGLE, 0, 180,80,180,80, TONE_ARG_EOL);
       }
   }
 }
