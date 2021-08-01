@@ -1,22 +1,20 @@
+#define BUZZER_PIN                  9
+#define TONES_ARR_SIZE              20
 
-void playToneTest(){
-    int j = 15;
-    delay(4000);
-    while (j-- > 0){
+volatile int      tones[TONES_ARR_SIZE];
+volatile char     toneType;
+volatile boolean  tonePlayInProgress = false;
+volatile char     tonesUpdateCount = 0;
+volatile int      tonesRepeatCount = 0;
 
-      int del = 200;
-
-      playTone(TONE_REPEAT, 8, del,del, TONE_ARG_EOL);      
-      delay (7000);
-
-      for (int i = 0; i<8; i++){
-        digitalWrite(BUZZER_PIN, HIGH);
-        delay (del);
-        digitalWrite(BUZZER_PIN, LOW);
-        delay (del);
-      }
-      delay (4000);
-  }  
+void playToneTest(){      
+  
+    delay(4000);    
+      
+    playTone(TONE_REPEAT_BLOCKING, 180, 100,800, TONE_ARG_EOL);      
+    delay(5000);
+    playTone(TONE_REPEAT, 3, 2000,800, TONE_ARG_EOL); //this will get discarded
+  
 }
 
 
@@ -39,26 +37,20 @@ void playTone(char type, int repeatCount, int num, ...){
   toneType = type;
   tonesRepeatCount = repeatCount;
   for (int i=0; i < TONES_ARR_SIZE; i++) tones[i] = 0;  //clear array
-    
-  //toneStartedOn = millis();
+  
   int idx = 0;   
   
-  tones[idx++] = 1; //millis();
-  //int num = va_arg(arguments, int);
+  tones[idx++] = 1;   
   while (num > 0){      
-      if (idx >= TONES_ARR_SIZE){
-          //TODO halt("ERR_TMR_9");
-      }      
+      if (idx >= TONES_ARR_SIZE)  haltProgram("ERR_TONE");          
   
       tones[idx] = tones[idx-1] + num;
       idx++;
-      num = va_arg(arguments, int);      
+      num = va_arg(arguments, int); 
   }  
 
   va_end(arguments); 
-
-  tonesUpdateCount++;  //this is signal to timer to start tone...
-  
+  tonesUpdateCount++;  //this is signal to timer to start tone...  
   while(!isTimerTonePlayInProgress()){}  //return after tone play has started
 }
 
@@ -78,7 +70,7 @@ void timerHandler_buzzer(){
 
     if (!started){
         started = true;
-        pinMode(BUZZER_LARGE_PIN, OUTPUT);        
+        pinMode(BUZZER_PIN, OUTPUT);        
     }
     
     if (isNewTimerBuzzerRequestReceived()){      
@@ -104,7 +96,7 @@ void timerHandler_buzzer(){
           //skip. Unnecessary last element sent by calling function, preventing continuous ON signal after tone sequence finished                 
         }
         else{
-          digitalWrite(BUZZER_LARGE_PIN, getBuzzerStatus(idx));
+          digitalWrite(BUZZER_PIN, getBuzzerStatus(idx));
         }
         idx++;
     }  
