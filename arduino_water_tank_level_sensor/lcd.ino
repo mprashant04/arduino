@@ -162,9 +162,6 @@ void lcdClear(){
 }
 
 
-//****************************************************************************************************************
-// NOTE: updated from timer function, so keep simple, avoid delays, unnecessary global var update, etc 
-//****************************************************************************************************************
 void lcdUpdateWaterStatus(){
   static boolean lastDisplayStatusFlag = true;
 

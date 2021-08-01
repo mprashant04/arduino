@@ -107,7 +107,6 @@
 #include <Wire.h>                   // Library for I2C communication
 #include <LiquidCrystal_I2C.h>      // Library for LCD
 #include "timers.h"
-#include <TimerInterrupt.h>
 #include "debug.h"
 #include "buzzer.h"
 #include "water_level_sensor.h"

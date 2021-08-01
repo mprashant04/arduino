@@ -179,7 +179,7 @@ void playTankLevelAlert(String type){
 }
 
 boolean isWaterReadingUpdated(){
-  static char lastWaterLevelReadingCount = waterLevelReadingCount - 1;
+  static char lastWaterLevelReadingCount = waterLevelReadingCount;
   if (lastWaterLevelReadingCount != waterLevelReadingCount){
       lastWaterLevelReadingCount = waterLevelReadingCount;
       return true;
