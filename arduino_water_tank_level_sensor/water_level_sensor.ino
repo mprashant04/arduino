@@ -25,9 +25,6 @@
 // EMA alpha factor, between 0 and 1. Finetune as needed. Lower the value, more samples will be used for averaging, i.e. slower response
 #define   EMA_a                         0.03
 
-int lastValue = -1;
-
-unsigned long lastReadingTakenOn = millis() - 99999;
 unsigned long levelAlertStartedOn = UNSIGNED_LONG_MAX;
 
 bool wasBelowFullLevel1 = false;
@@ -35,23 +32,30 @@ bool wasBelowFullLevel2 = false;
 bool wasAboveEmptyLevel = false;
 bool wasAboveEmptyLeve2 = false;
 
-boolean waterLevelRead(){
+//*****************************************************************************
+// Called from timer, ensure to keep simple logic
+// avoid String operations, delays, times, etc...
+// Update only volatile global variables...
+// 
+// Using timer to ensure signal reading frequency is not affected by random 
+// delays due to wifi, BT, etc.
+//*****************************************************************************
+void waterLevelRead(){
+  static int lastValue = -1;
   int sum = 0;                    
-  unsigned char sample_count = 0;   
+  unsigned char sample_count = 0;
 
-  //take reading after defined interval only
-  if ((millis() - lastReadingTakenOn) < WATER_LEVEL_READING_INTERVAL_MS) return false;
-  
-  // take a number of analog samples and add them up
-  while (sample_count < WATER_LEVEL_SAMPLES_COUNT) {
-      sum += analogRead(A0);     //TODO if value is very different than avg read, ignore it, i.e. noise reduction
-      sample_count++;
-      delay(10);
-  }
-
-  if (isDebugModeRawSignal())
+  if (isDebugModeRawSignal()){
     sum = analogRead(A0) * WATER_LEVEL_SAMPLES_COUNT;  //read raw signal, no sampling and averating
-
+  }
+  else{
+    // take a number of analog samples and add them up
+    while (sample_count < WATER_LEVEL_SAMPLES_COUNT) {
+        sum += analogRead(A0);     //TODO if value is very different than avg read, ignore it, i.e. noise reduction
+        sample_count++;
+        delay(10);
+    }
+  }
     
   waterLevelSignalValue = sum / WATER_LEVEL_SAMPLES_COUNT;
   if (waterLevelSignalValueEMA == -1)
@@ -68,22 +72,20 @@ boolean waterLevelRead(){
   waterLevelSignalValueEMA = round (waterLevelSignalValueEMA * 10.0) / 10.0;
   waterLevelPercentageEMA  = round (waterLevelPercentageEMA  * 10.0) / 10.0;
   
-
   
-  checkIfDeltaThresholdJumped();
+  checkIfDeltaThresholdJumped(lastValue);
   checkIfSafeRangeCrossed();
-  tankFullEmptyAlert();
+  //tankFullEmptyAlert();
 
   lastValue = waterLevelSignalValue;
+  waterLevelReadingCount++;
+  logLevels();  
 
-  logLevels();
-  lastReadingTakenOn = millis();
-  
-  return true;
+  //TODO: update LCD from here??? to have regular screen updates??
 }
 
 void logLevels(){
-  print("=", 12);
+  print("=", 15);
   print(waterLevelPercentageEMA ); 
   print("/"); 
   print(waterLevelPercentage ); 
@@ -97,19 +99,16 @@ void logLevels(){
   print(" ", 8); 
   print(waterLevelSignalThresholdJumpCount_Large); 
   print("/"); 
-  print(waterLevelSignalThresholdJumpCount_Small); 
-  print(" ", 5); 
-  print(millis() - lastReadingTakenOn); 
-  print("ms");  
+  print(waterLevelSignalThresholdJumpCount_Small);   
   println(" ");  
 }
 
-void checkIfDeltaThresholdJumped(){
+void checkIfDeltaThresholdJumped(int lastValue){
   if (lastValue >= 0){    
       if (abs(lastValue - waterLevelSignalValue) >= WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_LARGE){    
           waterLevelSignalThresholdJumpCount_Large ++;
           if (isDebugModeRawSignal())
-            playLoudTone(150);
+            playLoudTone(150);      //todo move tones to main looop() ??
           else
             playLoudToneRepeated(400, 150, 10); 
       }
@@ -130,13 +129,8 @@ void validateAlertLevelDefinitions(){
     bool ok = true;
     if (WATER_LEVEL_FULL_1_ALERT_PERCENTAGE >= WATER_LEVEL_FULL_2_ALERT_PERCENTAGE)     ok = false;
     if (WATER_LEVEL_EMPTY_1_ALERT_PERCENTAGE <= WATER_LEVEL_EMPTY_2_ALERT_PERCENTAGE)   ok = false;
-    if (!ok){
-        lcdTransientMessage("ERR_1");
-        while (true){
-            playLoudTone(100,100,200);            
-            delay(100);
-        }
-    }
+    if (!ok)        
+        haltProgram("ERR_12");    
 }
 
 void tankFullEmptyAlert(){
@@ -182,4 +176,13 @@ void playTankLevelAlert(String type){
       playLoudTone(100,50,100); 
   }
   //TODO pending for low
+}
+
+boolean isWaterReadingUpdated(){
+  static char lastWaterLevelReadingCount = waterLevelReadingCount - 1;
+  if (lastWaterLevelReadingCount != waterLevelReadingCount){
+      lastWaterLevelReadingCount = waterLevelReadingCount;
+      return true;
+  }
+  return false;
 }

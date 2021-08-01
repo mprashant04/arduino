@@ -10,7 +10,7 @@
 
 #define LCD_WIDTH                       20
 
-boolean lastDisplayStatusFlag = true;
+
 
 
 void lcdInit(){
@@ -161,7 +161,12 @@ void lcdClear(){
   lcd.clear();
 }
 
+
+//****************************************************************************************************************
+// NOTE: updated from timer function, so keep simple, avoid delays, unnecessary global var update, etc 
+//****************************************************************************************************************
 void lcdUpdateWaterStatus(){
+  static boolean lastDisplayStatusFlag = true;
 
   float levelPcIncrement = 2.5; // 40 blocks divided by 100
   float levelPc = 0.0;
@@ -192,10 +197,10 @@ void lcdUpdateWaterStatus(){
   lastDisplayStatusFlag =  !lastDisplayStatusFlag;   
   
   lcdPrint(centerAlign(String(round(waterLevelPercentageEMA))+ "%", LCD_WIDTH), 0, 3);  
-  lcdPrint(getBlinkStatusChar(), 18,3);    
+  lcdPrint(getBlinkStatusChar(lastDisplayStatusFlag), 18,3);    
 }
 
-String getBlinkStatusChar(){
+String getBlinkStatusChar(boolean lastDisplayStatusFlag){
   if (lastDisplayStatusFlag){
       if (isDebugModeRawSignal() && isSerialDebugMessagingEnabled())          return "ds";
       else if (isSerialDebugMessagingEnabled())                               return " d";

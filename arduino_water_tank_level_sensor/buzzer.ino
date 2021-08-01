@@ -103,27 +103,6 @@ void playInit(){
   pinMode(BUZZER_PIN, OUTPUT); 
 }
 
-void playPassed() { /* function playPassed */
-  ////Play 'ON' Sound
-  int melodyOn[] = {NOTE_C5, NOTE_C6, NOTE_D5, NOTE_A6};
-  int durationOn = 200;
-  for (int thisNote = 0; thisNote < 4; thisNote++) {
-    tone(BUZZER_PIN, melodyOn[thisNote], durationOn);
-    delay(200);
-  }
-}
-
-void playFailed() { /* function playFailed */
-  ////Play 'OFF' Sound
-  int melodyOff[] = {NOTE_C3, NOTE_D3};
-  int durationOff = 200;
-  for (int thisNote = 0; thisNote < 2; thisNote++) {
-    tone(BUZZER_PIN, melodyOff[thisNote], durationOff);
-    delay(200);
-  }
-}
-
-
 void playLoudToneRepeated(int beep, int delayMillis, int repeations){
   while (repeations-- > 0){
       playLoudTone(beep);
@@ -164,24 +143,6 @@ void playToneTest(){
    while (j-- > 0){
 
       int del = 200;
-      tone (BUZZER_LARGE_PIN, 3750, del);
-      delay(del);
-      tone (BUZZER_LARGE_PIN, 4250, del);
-      delay(del);
-      tone (BUZZER_LARGE_PIN, 3750, del);
-      delay(del);
-      tone (BUZZER_LARGE_PIN, 4250, del);
-      delay(del);
-      tone (BUZZER_LARGE_PIN, 3750, del);
-      delay(del);
-      tone (BUZZER_LARGE_PIN, 4250, del);
-      delay(del);
-      tone (BUZZER_LARGE_PIN, 3750, del);
-      delay(del);
-      tone (BUZZER_LARGE_PIN, 4250, del);
-      delay(del);
-
-      delay (4000);
 
       playLoudToneRepeated(del,del,8);
       delay (4000);

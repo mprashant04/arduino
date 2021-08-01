@@ -92,16 +92,25 @@
  *        - in Arduino ide, use one of theese 2 new ports (usually first one) and just upload  (ensure no other device is connected to this BT device)
  *        - to use ide serial monitor, just select same port and choose baud rate 57600
  *    
+ *    - cannot use tone() fuction now, causes compilation error due to conflict with TimerInterrupt library
+ *        in short looks like cannot use anything based on hardware timer, like IR led timer based library, etc.
  *             
  * 
  */
 
 
+
+
+
+
 #include <SoftwareSerial.h>
 #include <Wire.h>                   // Library for I2C communication
 #include <LiquidCrystal_I2C.h>      // Library for LCD
+#include "timers.h"
+#include <TimerInterrupt.h>
 #include "debug.h"
 #include "buzzer.h"
+#include "water_level_sensor.h"
 
 
 #define WIFI_RESET                    4
@@ -131,13 +140,6 @@ LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, 20, 4);
 SoftwareSerial esp8266(3,2);
 
 
-int   waterLevelPercentage      = 0;
-int   waterLevelSignalValue     = 0;
-float waterLevelPercentageEMA   = -1;
-float waterLevelSignalValueEMA  = -1;
-int   waterLevelSignalThresholdJumpCount_Small = 0;
-int   waterLevelSignalThresholdJumpCount_Large = 0;
-
 int wifi_CommandFailureCount;
 int wifi_CommandSuccessCount;
 
@@ -152,23 +154,24 @@ void setup() {
   //            wifi having high rate was causing some data loss for wifi. So win-win case
   BTserial.begin(57600); //(38400); 
   esp8266.begin(115200);     
-  
+
   debugInit();
   playInit();
   pinMode(WIFI_RESET, OUTPUT);
   lcdInit();    
     
   lcdWelcomeMessage();  
+  initTimers();   //start times only after initiation is complete.... e.g. capacitor charging delay, etc.
 }
 
 void loop() {
   unsigned long startedOn = millis();
   
   handleBluetoothCommands();
-  
-  if (waterLevelRead())
-    lcdUpdateWaterStatus();  
 
+  if (isWaterReadingUpdated())
+    lcdUpdateWaterStatus();
+  
   if (isDebugModeRawSignal())
     delay (500);
   else

@@ -21,3 +21,11 @@ String centerAlign(String msg, int width){
     }
     return msg;    
 }
+
+void haltProgram(String lcdMessage){
+  lcdTransientMessage(lcdMessage);
+  while (true){
+      playLoudTone(100,100,200);            
+      delay(1000);
+  }
+}
