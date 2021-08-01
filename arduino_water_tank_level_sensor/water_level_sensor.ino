@@ -178,10 +178,11 @@ void playTankLevelAlert(String type){
   //TODO pending for low
 }
 
-boolean isWaterReadingUpdated(){
+boolean isWaterReadingUpdated(boolean resetStatusIfChanged){
   static char lastWaterLevelReadingCount = waterLevelReadingCount;
   if (lastWaterLevelReadingCount != waterLevelReadingCount){
-      lastWaterLevelReadingCount = waterLevelReadingCount;
+      if (resetStatusIfChanged)
+          lastWaterLevelReadingCount = waterLevelReadingCount;
       return true;
   }
   return false;

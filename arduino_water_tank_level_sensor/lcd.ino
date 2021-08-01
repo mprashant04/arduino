@@ -131,14 +131,10 @@ void lcdTransientMessageClear(){
 }
 
 void lcdWelcomeMessage(){    
-  lcdPrint("INITIATING...", 4, 1);
-  //playPassed();
+  lcdPrint("INITIATING...", 4, 1);  
   playLoudTone(150);  
-  delay (2000);
   
-  //lcdPrintSpecialChar (CHAR_POWER, 8, 3);
-  
-  for (int i = 15; i > 0 ; i--){
+  for (int i = 20; i > 0 ; i--){
     lcdPrint(String (i) + "     ", 9, 3);
     delay (1000);
   }

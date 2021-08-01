@@ -160,7 +160,10 @@ void setup() {
   lcdInit();    
     
   lcdWelcomeMessage();  
+
+  
   initTimers();   //start times only after initiation is complete.... e.g. capacitor charging delay, etc.
+  waitTillFirstWaterSignalRead();  
 }
 
 void loop() {
@@ -168,7 +171,7 @@ void loop() {
   
   handleBluetoothCommands();
 
-  if (isWaterReadingUpdated())
+  if (isWaterReadingUpdated(true))
     lcdUpdateWaterStatus();
   
   if (isDebugModeRawSignal())
@@ -182,4 +185,10 @@ void loop() {
 void scheduledReboot(){
   if (getUptimeInHours() >= REBOOT_INTERVAL_HOURS)    
       reboot();
+}
+
+void waitTillFirstWaterSignalRead(){
+  lcdTransientMessage("Init Timers..");  
+  while (!isWaterReadingUpdated(false)){}
+  lcdTransientMessageClear();
 }
