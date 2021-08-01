@@ -40,7 +40,7 @@ bool wasAboveEmptyLeve2 = false;
 // Using timer to ensure signal reading frequency is not affected by random 
 // delays due to wifi, BT, etc.
 //*****************************************************************************
-void waterLevelRead(){
+void timerHandler_waterLevelRead(){
   static int lastValue = -1;
   int sum = 0;                    
   unsigned char sample_count = 0;

@@ -156,3 +156,30 @@ void playToneTest(){
       delay (4000);
   }  
 }
+
+
+
+//*****************************************************************************
+// Called from timer, ensure to keep simple logic
+// avoid String operations, delays, times, etc...
+// Update only volatile global variables...
+// 
+// Using timer allow non-blocking custom audio alerts
+//*****************************************************************************
+void timerHandler_buzzer()
+{
+  static bool toggle1 = false;
+  static bool started = false;
+  
+ // waterLevelRead();  
+
+//  if (!started)
+//  {
+//    started = true;
+//    pinMode(outputPin, OUTPUT);
+//  }
+//  
+//  digitalWrite(outputPin, toggle1);
+//  toggle1 = !toggle1;
+
+}
