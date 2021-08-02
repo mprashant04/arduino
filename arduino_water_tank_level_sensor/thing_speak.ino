@@ -44,7 +44,7 @@ void thingSpeakSendData(){
             state = TS_AT_CIPMUX;
             break;
       case TS_AT_CIPMUX:
-            sendWifiCommand("AT+CIPMUX=1", 1, AT_OK);
+            sendWifiCommand(F("AT+CIPMUX=1"), 1, AT_OK);
             state = TS_AT_CPSTART;
             break;
       case TS_AT_CPSTART:
@@ -66,7 +66,7 @@ void thingSpeakSendData(){
             }
             break;
       case TS_AT_CLOSE:
-            sendWifiCommand("AT+CIPCLOSE=0", 1, AT_OK);
+            sendWifiCommand(F("AT+CIPCLOSE=0"), 1, AT_OK);
             state = TS_AT_FINISHED;
             break;
       case TS_AT_FINISHED:
@@ -75,9 +75,9 @@ void thingSpeakSendData(){
             break;
       case TS_DONE:
             print(wifi_CommandSuccessCount);
-            print("/");
+            print(F("/"));
             print(wifi_CommandFailureCount);  
-            print("  :  ");
+            print(F("  :  "));
             println(thingSpeakConsecutiveFailureCount);            
             updateApiCallStatusOnLCD();
             state = TS_START;

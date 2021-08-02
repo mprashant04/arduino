@@ -53,7 +53,7 @@ void sendWifiCommand(String command, int maxRetries, char readReplay[]) {
   boolean found = false; 
   
   //print(thingSpeak_CountTrueCommand);
-  print(". ");
+  print(F(". "));
   print(command);  
   
   while(maxRetries > 0 && !found)
@@ -69,5 +69,5 @@ void sendWifiCommand(String command, int maxRetries, char readReplay[]) {
     wifi_CommandFailureCount++;      
 
 
-  println( found ? " OK"  : "        **** Fail **** ");
+  println( found ? F(" OK")  : F("        **** Fail **** "));
 }

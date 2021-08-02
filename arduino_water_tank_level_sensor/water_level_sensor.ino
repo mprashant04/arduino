@@ -102,22 +102,22 @@ void timerHandler_waterLevelRead(){
 void logLevels(){
   if (!isSerialDebugMessagingEnabled()) return;
   
-  print("=", 15);
+  print(F("\n=============== "));
   print(waterLevelPercentageEMA ); 
-  print("/"); 
+  print(F("/")); 
   print(waterLevelPercentage ); 
-  print("%" ); 
-  print(" ", 4); 
-  print("(" ); 
+  print(F("%")); 
+  print(F("    ")); 
+  print(F("(")); 
   print(waterLevelSignalValueEMA); 
-  print("/" ); 
+  print(F("/")); 
   print(waterLevelSignalValue); 
-  print(")"); 
-  print(" ", 8); 
+  print(F(")")); 
+  print(F("        ")); 
   print(waterLevelSignalThresholdJumpCount_Large); 
-  print("/"); 
+  print(F("/")); 
   print(waterLevelSignalThresholdJumpCount_Small);   
-  println(" ");  
+  println(F(" "));  
 }
 
 void checkIfDeltaThresholdJumped(int lastValue){
@@ -147,7 +147,7 @@ void validateAlertLevelDefinitions(){
     if (WATER_LEVEL_FULL_1_ALERT_PERCENTAGE >= WATER_LEVEL_FULL_2_ALERT_PERCENTAGE)     ok = false;
     if (WATER_LEVEL_EMPTY_1_ALERT_PERCENTAGE <= WATER_LEVEL_EMPTY_2_ALERT_PERCENTAGE)   ok = false;
     if (!ok)        
-        haltProgram("ERR_12");    
+        haltProgram(F("Conf Error!!"));    
 }
 
 void tankFullEmptyAlert(){

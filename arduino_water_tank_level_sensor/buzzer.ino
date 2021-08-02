@@ -42,7 +42,7 @@ void playTone(char type, int repeatCount, int num, ...){
   
   tones[idx++] = 1;   
   while (num > 0){      
-      if (idx >= TONES_ARR_SIZE)  haltProgram("ERR_TONE");          
+      if (idx >= TONES_ARR_SIZE)  haltProgram(F("Tone Error!!"));          
   
       tones[idx] = tones[idx-1] + num;
       idx++;

@@ -36,6 +36,8 @@
 /*  =============================================================
  *     Development Notes
  *  =============================================================
+ *  Generic dev notes recorded here - https://github.com/mprashant04/arduino
+ *  
  * Wifi References / Notes
  *    - https://www.youtube.com/watch?v=nMWwqcn7ofw
  *    - more ref examples?? - https://github.com/mathworks/thingspeak-arduino 
@@ -156,7 +158,7 @@ void setup() {
 
   initTimers();  //tones will work only after this...
 
-  print("#", 30); 
+  println(F("\n##########################################")); 
   debugInit();
   
   pinMode(WIFI_RESET, OUTPUT);
@@ -190,7 +192,7 @@ void scheduledReboot(){
 }
 
 void waitTillFirstWaterSignalRead(){
-  lcdTransientMessage("Init Timers..");  
+  lcdTransientMessage(F("Init Timers.."));  
   while (!isWaterReadingUpdated(false)){}
   lcdTransientMessageClear();
 }

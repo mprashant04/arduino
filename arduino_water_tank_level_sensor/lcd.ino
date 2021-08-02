@@ -127,11 +127,11 @@ void lcdTransientMessage(String msg, int millSeconds){
 
 
 void lcdTransientMessageClear(){  
-  lcdPrint("                    ", LCD_TRANSIENT_MESSAGE_COL, LCD_TRANSIENT_MESSAGE_ROW);
+  lcdPrint(F("                    "), LCD_TRANSIENT_MESSAGE_COL, LCD_TRANSIENT_MESSAGE_ROW);
 }
 
 void lcdWelcomeMessage(){    
-  lcdPrint("INITIATING...", 4, 1);  
+  lcdPrint(F("INITIATING..."), 4, 1);  
   playTone(TONE_SINGLE, 0, 150, TONE_ARG_EOL); 
   
   for (int i = 20; i > 0 ; i--){
@@ -195,13 +195,13 @@ void lcdUpdateWaterStatus(){
 
 String getBlinkStatusChar(boolean lastDisplayStatusFlag){
   if (lastDisplayStatusFlag){
-      if (isDebugModeRawSignal() && isSerialDebugMessagingEnabled())          return "ds";
-      else if (isSerialDebugMessagingEnabled())                               return " d";
-      else if (isDebugModeRawSignal())                                        return " s";
+      if (isDebugModeRawSignal() && isSerialDebugMessagingEnabled())          return F("ds");
+      else if (isSerialDebugMessagingEnabled())                               return F(" d");
+      else if (isDebugModeRawSignal())                                        return F(" s");
 
-      return " .";
+      return F(" .");
   }
-  return "  ";
+  return F("  ");
 }
 
 

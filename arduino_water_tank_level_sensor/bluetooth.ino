@@ -3,7 +3,6 @@
 #define BT_CMD_TONE_TEST                      "<tone_test>"
 #define BT_CMD_REBOOT                         "<reboot>"
 
-#define MSG_INVALID_BT_COMAND                 "Invalid BT Command  "
 
 void handleBluetoothCommands(){        
     String cmd = readBluetoothCommand();            
@@ -26,8 +25,9 @@ void handleBluetoothCommands(){
     }
     else if (cmd.length() > 0){        
         playTone(TONE_SINGLE, 0, 700, TONE_ARG_EOL); 
-        lcdTransientMessage(MSG_INVALID_BT_COMAND, 2000);
-        println(MSG_INVALID_BT_COMAND + cmd);     
+        lcdTransientMessage(F("Invalid BT Command"), 2000);
+        print(F("Invalid BT Command: "));     
+        println(cmd);     
     }
 }
 

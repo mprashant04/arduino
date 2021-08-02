@@ -5,12 +5,7 @@ char serialDebugMessagingEnabled = '0';
 
 void debugInit(){  
 }
-
- void print(String msg, int numberOfTimesToPrint){
-    if (!isSerialDebugMessagingEnabled()) return;
-    while (numberOfTimesToPrint-- > 0)
-       print(msg);
- }
+ 
  void print(int msg){
     if (!isSerialDebugMessagingEnabled()) return;
     print(String(msg));
@@ -51,11 +46,10 @@ void debugInit(){
       debug_mode_raw_signal = '0';
     else
         debug_mode_raw_signal = '1';
-
-    //------not printing to save some memory of string literals--------------------
-    //String msg = (isDebugModeRawSignal() ? "Signal Debug ON" : "Signal Debug OFF");
-    //lcdTransientMessage(msg, 2000);
-    //println(msg);    
+    
+    String msg = (isDebugModeRawSignal() ? F("Signal Debug ON") : F("Signal Debug OFF"));
+    lcdTransientMessage(msg, 2000);
+    println(msg);    
 }
 
  boolean isDebugModeRawSignal(){    
@@ -68,6 +62,9 @@ void debugInit(){
 
  void toggleSerialDebugMessagingEnabled(){    
     serialDebugMessagingEnabled = isSerialDebugMessagingEnabled() ? '0' : '1';             
-    //println( isSerialDebugMessagingEnabled() ? "serial debug messages  ENABLED" : "serial debug messages  DISABLED", true);  //not printing to save some memory of string literals
+
+    String msg = isSerialDebugMessagingEnabled() ? F("BT Logs ENABLED") : F("BT Logs DISABLED");
+    println(msg);  
+    lcdTransientMessage(msg, 2000);  
  }
  
