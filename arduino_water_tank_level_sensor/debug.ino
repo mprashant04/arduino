@@ -23,6 +23,10 @@ void debugInit(){
     if (!isSerialDebugMessagingEnabled()) return;
     println(String(msg));
  }
+ void println(unsigned int msg){
+    if (!isSerialDebugMessagingEnabled()) return;
+    println(String(msg));
+ }
  void print(float msg){
     if (!isSerialDebugMessagingEnabled()) return;
     print(String(msg));
