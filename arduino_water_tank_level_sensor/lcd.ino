@@ -190,7 +190,17 @@ void lcdUpdateWaterStatus(){
   lastDisplayStatusFlag =  !lastDisplayStatusFlag;   
   
   lcdPrint(centerAlign(String(round(waterLevelPercentageEMA))+ "%", LCD_WIDTH), 0, 3);  
-  lcdPrint(getBlinkStatusChar(lastDisplayStatusFlag), 18,3);    
+  lcdPrint(getBlinkStatusChar(lastDisplayStatusFlag), 18,3); 
+
+  switch (waterLevelAlertType){
+      case 0:    lcdPrint(F("  "), 0,3);   break;
+      case 1:    lcdPrint(F("H1"), 0,3);   break;
+      case 2:    lcdPrint(F("H2"), 0,3);   break;
+      case -1:   lcdPrint(F("L1"), 0,3);   break;
+      case -2:   lcdPrint(F("L2"), 0,3);   break;
+      default:   lcdPrint(F("??"), 0,3);   break;
+  }
+  
 }
 
 String getBlinkStatusChar(boolean lastDisplayStatusFlag){
