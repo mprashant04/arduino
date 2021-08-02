@@ -1,3 +1,4 @@
+#define WIFI_RESET_PIN      4
 #define AT_CMD_RST          "AT+RST"
 #define AT_CMD_CWMODE       "AT+CWMODE=1"
 #define AT_CMD_CWGAP        "AT+CWJAP=\"home06_3\",\"trGsdu457SWydgbdyjYUfj758UF\""   //add here wifi SSID and password
@@ -6,6 +7,10 @@
 #define MSG_WIFI_RESET      "  Wifi Reset.."
 
 boolean wifiConnected = false;
+
+void wifiInit(){
+  pinMode(WIFI_RESET_PIN, OUTPUT);
+}
 
 void connectWifi(){  
   if (wifiConnected == false){
@@ -34,9 +39,9 @@ void hardResetWifi(){
   //Single reset is enough i think, but resetting multiple times just to be safe. 
   //After each reset, blue led blinks on wifi module
   for (int i = 0; i < 3; i++){  
-    digitalWrite(WIFI_RESET, HIGH);
+    digitalWrite(WIFI_RESET_PIN, HIGH);
     delay(500);
-    digitalWrite(WIFI_RESET, LOW);
+    digitalWrite(WIFI_RESET_PIN, LOW);
     delay(500);
   }    
   
