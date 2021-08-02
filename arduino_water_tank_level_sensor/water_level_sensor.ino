@@ -34,8 +34,7 @@ unsigned long levelAlertStartedOn = UNSIGNED_LONG_MAX;
 // Using timer to ensure signal reading frequency is not affected by random 
 // delays due to wifi, BT, etc.
 //*****************************************************************************
-void timerHandler_waterLevelRead(){
-  static int lastValue = -1;
+void timerHandler_waterLevelRead(){  
   static unsigned long sum = 0;
   static int sample_count = 0;
 
@@ -81,11 +80,11 @@ void timerHandler_waterLevelRead(){
   sample_count = 0 - (( (isDebugModeRawSignal() ? READING_FREQUENCY_SIGNAL_DEBUG : READING_FREQUENCY) / TIMER_FREQUENCY) - WATER_LEVEL_SAMPLES_COUNT);
       
   
-  checkIfDeltaThresholdJumped(lastValue);
+  checkIfDeltaThresholdJumped();
   checkIfSafeRangeCrossed();
   checkTankLevelAlerts();
 
-  lastValue = waterLevelSignalValue;
+  
   waterLevelReadingCount++;
   logLevels();  
 }
@@ -111,19 +110,27 @@ void logLevels(){
   println(F(" "));  
 }
 
-void checkIfDeltaThresholdJumped(int lastValue){
-  if (lastValue >= 0){    
+void checkIfDeltaThresholdJumped(){
+  static int lastValue = -1;
+  
+  if (lastValue >= 0){
       if (abs(lastValue - waterLevelSignalValue) >= WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_LARGE){    
           waterLevelSignalThresholdJumpCount_Large ++;
-          if (isDebugModeRawSignal())
-            playTone(TONE_SINGLE, 0, 150, TONE_ARG_EOL);      //todo move tones to main looop() ??
+          
+          // can NOT play here in timer, will  hang arduino, move tones play task to main looop().
+          /*if (isDebugModeRawSignal())
+            playTone(TONE_SINGLE, 0, 150, TONE_ARG_EOL);      
           else
             playTone(TONE_REPEAT, 4, 400, 150, TONE_ARG_EOL);
+          */
+          
       }
       else if (abs(lastValue - waterLevelSignalValue) >= WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_SMALL){    
           waterLevelSignalThresholdJumpCount_Small ++;          
       }      
-  }  
+  }
+
+  lastValue = waterLevelSignalValue;
 }
 
 void checkIfSafeRangeCrossed(){
