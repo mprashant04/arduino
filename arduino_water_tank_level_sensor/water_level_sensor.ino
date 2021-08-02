@@ -2,12 +2,12 @@
 #define   WATER_SIGNAL_MIN                            270  
 #define   WATER_SIGNAL_MAX                            730
 
-#define   WATER_LEVEL_FULL_1_ALERT_PERCENTAGE         75      //main tank about to get full
-#define   WATER_LEVEL_FULL_2_ALERT_PERCENTAGE         94      //solar tank full, overfill detected in main tank (todo- increase above 100% after joining solar tank to main tank)
-#define   WATER_LEVEL_EMPTY_1_ALERT_PERCENTAGE        29      //main tank about to go empty
-#define   WATER_LEVEL_EMPTY_2_ALERT_PERCENTAGE        15      //main tank about to go empty
-#define   WATER_LEVEL_ALERT_CROSS_THRESHOLD           1
-#define   WATER_LEVEL_ALERT_PLAY_SECONDS              120     //no. of seconds to play alert tone on level cross
+#define   WATER_ALERT_LEVEL_H1                        80      //main tank about to get full
+#define   WATER_ALERT_LEVEL_H2                        95      //solar tank full, overfill detected in main tank (todo- increase above 100% after joining solar tank to main tank)
+#define   WATER_ALERT_LEVEL_L1                        35      //main tank about to go empty
+#define   WATER_ALERT_LEVEL_L2                        20      //main tank about to go empty
+#define   WATER_ALERT_LEVEL_CROSS_THRESHOLD           1
+#define   WATER_ALERT_TONE_COUNT                      180
 
 #define   WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_SMALL     5
 #define   WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_LARGE     15
@@ -18,11 +18,6 @@
 #define   READING_FREQUENCY                      1000   //in milli sec
 #define   READING_FREQUENCY_SIGNAL_DEBUG         300    //in milli sec
 
-#define   ALERT_TYPE_NA       "-"
-#define   ALERT_TYPE_H1       "H1"
-#define   ALERT_TYPE_H2       "H2"
-#define   ALERT_TYPE_L1       "L1"
-#define   ALERT_TYPE_L2       "L2"
 
 // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
 // EMA alpha factor, between 0 and 1. Finetune as needed. Lower the value, more samples will be used for averaging, i.e. slower response
@@ -30,10 +25,6 @@
 
 unsigned long levelAlertStartedOn = UNSIGNED_LONG_MAX;
 
-bool wasBelowFullLevel1 = false;
-bool wasBelowFullLevel2 = false;
-bool wasAboveEmptyLevel = false;
-bool wasAboveEmptyLeve2 = false;
 
 //*****************************************************************************
 // Called from timer, ensure to keep simple logic
@@ -92,7 +83,7 @@ void timerHandler_waterLevelRead(){
   
   checkIfDeltaThresholdJumped(lastValue);
   checkIfSafeRangeCrossed();
-  //tankFullEmptyAlert();
+  checkTankLevelAlerts();
 
   lastValue = waterLevelSignalValue;
   waterLevelReadingCount++;
@@ -142,58 +133,64 @@ void checkIfSafeRangeCrossed(){
 }
 
 //check if any manual config errors
-void validateAlertLevelDefinitions(){
+void validateWaterAlertLevelDefinitions(){
     bool ok = true;
-    if (WATER_LEVEL_FULL_1_ALERT_PERCENTAGE >= WATER_LEVEL_FULL_2_ALERT_PERCENTAGE)     ok = false;
-    if (WATER_LEVEL_EMPTY_1_ALERT_PERCENTAGE <= WATER_LEVEL_EMPTY_2_ALERT_PERCENTAGE)   ok = false;
+    if (WATER_ALERT_LEVEL_H2 - WATER_ALERT_LEVEL_CROSS_THRESHOLD <= WATER_ALERT_LEVEL_H1)     ok = false;
+    if (WATER_ALERT_LEVEL_L2 + WATER_ALERT_LEVEL_CROSS_THRESHOLD >= WATER_ALERT_LEVEL_L1)     ok = false;
     if (!ok)        
         haltProgram(F("Conf Error!!"));    
 }
 
-void tankFullEmptyAlert(){
-  int curLevel = round(waterLevelPercentageEMA);
-  String alertType = ALERT_TYPE_NA;
 
-  validateAlertLevelDefinitions();
+void checkTankLevelAlerts(){
+  static bool wasBelowH1 = false;
+  static bool wasBelowH2 = false;
+  static bool wasAboveL1 = false;
+  static bool wasAboveL2 = false;
+  static char alertType  = 0;
 
-  if (curLevel <= WATER_LEVEL_FULL_1_ALERT_PERCENTAGE   - WATER_LEVEL_ALERT_CROSS_THRESHOLD)   wasBelowFullLevel1 = true;
-  if (curLevel <= WATER_LEVEL_FULL_2_ALERT_PERCENTAGE   - WATER_LEVEL_ALERT_CROSS_THRESHOLD)   wasBelowFullLevel2 = true;
-  if (curLevel >= WATER_LEVEL_EMPTY_1_ALERT_PERCENTAGE  + WATER_LEVEL_ALERT_CROSS_THRESHOLD)   wasAboveEmptyLevel = true;
-  if (curLevel >= WATER_LEVEL_EMPTY_2_ALERT_PERCENTAGE  + WATER_LEVEL_ALERT_CROSS_THRESHOLD)   wasAboveEmptyLeve2 = true;
-
-  //folliwing if sequence is imp, pay attention
-  if (wasBelowFullLevel1 && curLevel >= WATER_LEVEL_FULL_1_ALERT_PERCENTAGE)   alertType = ALERT_TYPE_H1;
-  if (wasBelowFullLevel2 && curLevel >= WATER_LEVEL_FULL_2_ALERT_PERCENTAGE)   alertType = ALERT_TYPE_H2;
-  if (wasAboveEmptyLevel && curLevel <= WATER_LEVEL_EMPTY_1_ALERT_PERCENTAGE)  alertType = ALERT_TYPE_L1;
-  if (wasAboveEmptyLeve2 && curLevel <= WATER_LEVEL_EMPTY_2_ALERT_PERCENTAGE)  alertType = ALERT_TYPE_L2;
-
-  playTankLevelAlert(alertType);
-}
-
-
-void playTankLevelAlert(String type){
-  //-------- No alert, reset flags and return --------------------
-  if (type == ALERT_TYPE_NA){
-      levelAlertStartedOn = 0;
-      return;
-  }
-  //-------------------------------------------------------------
-
-  if (levelAlertStartedOn == 0)  levelAlertStartedOn = millis(); 
+  //TODO - skip alert logic for 1 min after startup??
   
-  if ((millis() - levelAlertStartedOn) > WATER_LEVEL_ALERT_PLAY_SECONDS * 1000) {   //alert played for required time, stop it now
-      //TODO stop tones if already playing??
-      return;   
-  }
+  float curLevel = waterLevelPercentageEMA;   //todo remove variable, durectly use level value to save memory  
 
-  if (type == ALERT_TYPE_H1){
-      //playLoudTone(100); 
-  }
-  else if (type == ALERT_TYPE_H1){
-      //playLoudTone(100,50,100); 
-  }
-  //TODO pending for low
+  if (!wasBelowH1 && curLevel < WATER_ALERT_LEVEL_H1 - WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasBelowH1 = true;  alertType = 0;  }
+  if (!wasBelowH2 && curLevel < WATER_ALERT_LEVEL_H2 - WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasBelowH2 = true;  alertType = 0;  }
+  if (!wasAboveL1 && curLevel > WATER_ALERT_LEVEL_L1 + WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasAboveL1 = true;  alertType = 0;  }
+  if (!wasAboveL2 && curLevel > WATER_ALERT_LEVEL_L2 + WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasAboveL2 = true;  alertType = 0;  }
+
+  //folliwing if sequence is imp
+  if (wasBelowH1 && curLevel > WATER_ALERT_LEVEL_H1) { wasBelowH1 = false;  alertType = 1;  }
+  if (wasBelowH2 && curLevel > WATER_ALERT_LEVEL_H2) { wasBelowH2 = false;  alertType = 2;  }
+  if (wasAboveL1 && curLevel < WATER_ALERT_LEVEL_L1) { wasAboveL1 = false;  alertType = -1; }
+  if (wasAboveL2 && curLevel < WATER_ALERT_LEVEL_L1) { wasAboveL2 = false;  alertType = -2; }
+
+  waterLevelAlertType = alertType;
 }
+
+void playWaterLevelAlertIfAny(){
+  static char lastAlertType = -99;
+
+  if (lastAlertType != waterLevelAlertType){
+      lastAlertType = waterLevelAlertType;
+      
+      switch (lastAlertType){
+          case 0:     //do nothing
+              break;
+              
+          case  1:    //H1 alert              
+          case -1:    //L1 alert              
+              playTone(TONE_REPEAT_BLOCKING, WATER_ALERT_TONE_COUNT, 100, 900, TONE_ARG_EOL);
+              break;
+              
+          case  2:    //H2 alert              
+          case -2:    //L2 alert              
+              playTone(TONE_REPEAT_BLOCKING, WATER_ALERT_TONE_COUNT, 500, 500, TONE_ARG_EOL);
+              break;        
+      }    
+  }    
+}
+
+
 
 boolean isWaterReadingUpdated(boolean resetStatusIfChanged){
   static char lastWaterLevelReadingCount = waterLevelReadingCount;

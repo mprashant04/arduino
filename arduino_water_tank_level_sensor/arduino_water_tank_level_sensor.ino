@@ -114,7 +114,6 @@
 #include "water_level_sensor.h"
 
 
-#define WIFI_RESET                    4
 #define LCD_TRANSIENT_MESSAGE_COL     0
 #define LCD_TRANSIENT_MESSAGE_ROW     2
 #define REBOOT_INTERVAL_HOURS         12
@@ -158,13 +157,12 @@ void setup() {
 
   initTimers();  //tones will work only after this...
 
-  println(F("\n##########################################")); 
-  debugInit();
-  
-  pinMode(WIFI_RESET, OUTPUT);
-  lcdInit();
+  println(F("\n##########################################"));   
     
-  lcdWelcomeMessage();  
+  lcdInit();
+  wifiInit();
+  startupValidations();    
+  lcdWelcomeMessage();
 
   startWaterReading = true;
   waitTillFirstWaterSignalRead();  
@@ -175,14 +173,16 @@ void loop() {
   
   handleBluetoothCommands();
 
-  if (isWaterReadingUpdated(true))
-    lcdUpdateWaterStatus();
+  if (isWaterReadingUpdated(true)){
+      lcdUpdateWaterStatus();
+      playWaterLevelAlertIfAny();
+  }
   
   if (isDebugModeRawSignal())
     delay (500);
   else
     thingSpeakSendData();    
-
+  
   scheduledReboot(); 
 }
 
@@ -191,8 +191,14 @@ void scheduledReboot(){
   //    reboot();
 }
 
+
 void waitTillFirstWaterSignalRead(){
   lcdTransientMessage(F("Init Timers.."));  
   while (!isWaterReadingUpdated(false)){}
   lcdTransientMessageClear();
+}
+
+
+void startupValidations(){    
+  validateWaterAlertLevelDefinitions();
 }
