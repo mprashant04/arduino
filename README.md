@@ -1,1 +1,2 @@
-# This contains all my arduino projects, development libraries, notes, etc
+Saving memory
+- Use F() for string literals, so that temp variables consuming memory will not be created 
