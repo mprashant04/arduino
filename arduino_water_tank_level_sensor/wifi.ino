@@ -13,11 +13,12 @@ void connectWifi(){
 
     //Many times on startup wifi does not connect till module is hard reset. Using ocrocoupler for reset
     hardResetWifi();    
+    delay(1000);
     
     sendWifiCommand(AT_CMD_RST,    5,  AT_OK);
     sendWifiCommand(AT_CMD_CWMODE, 5,  AT_OK);
     sendWifiCommand(AT_CMD_CWGAP,  20, AT_OK);  
-    delay(1000);
+    delay(500);
   }
 }
 
@@ -39,8 +40,7 @@ void hardResetWifi(){
     delay(500);
   }    
   
-  lcdTransientMessageClear();
-  delay(1000);
+  lcdTransientMessageClear();  
 }
 
 

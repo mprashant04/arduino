@@ -12,7 +12,10 @@ void reboot(){
   //    String data  = "some garbage";
   //    reboot();  
 
-  resetFunc();
+  //option-2
+  //update - this does not reset chip, just moves program execution to start. Have seen some 
+  // wierd behavior like repeated restarts, etc with this approach. So not using it
+  //resetFunc();
 }
 
 String centerAlign(String msg, int width){

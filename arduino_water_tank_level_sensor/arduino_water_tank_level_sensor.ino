@@ -123,8 +123,6 @@
 
 LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x3F, 20, 4); 
 
-void(* resetFunc) (void) = 0;//declare reset function at address 0
-
 
 // was not able to use 2 software serials (BT and wifi) at once, hence connected BT to tx/rx pins and using as inbuilt serial. Can flip between tx/rx ping and 16-17 pins by using jumpers on board
 // after changing jumper comment/uncomment folloing #define appropriately

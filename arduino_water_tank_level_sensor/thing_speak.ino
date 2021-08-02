@@ -1,5 +1,5 @@
-#define  MAX_FAILURES_TO_WARN         10
-#define  MAX_FAILURES_TO_RECONNECT    20
+#define  MAX_FAILURES_TO_WARN         30
+#define  MAX_FAILURES_TO_RECONNECT    15
 
 String THINGSPEAK_HOST = "api.thingspeak.com";
 String THINGSPEAK_PORT = "80";
@@ -29,7 +29,7 @@ unsigned long delayStartedOn = 0;
 unsigned char apiStatusIndex = 0;
 char apiStatus[20];
 
-int thingSpeakConsecutiveFailureCount = 0;
+unsigned int thingSpeakConsecutiveFailureCount = 0;
 
 char dc[200];  //keep size 15-20 bytes more than size found in AT+CIPSEND command logs
 
@@ -96,13 +96,8 @@ void handleFailures(){
   
 
   if (thingSpeakConsecutiveFailureCount > 0){
-      if ( thingSpeakConsecutiveFailureCount % MAX_FAILURES_TO_RECONNECT == 0 ) {                     
-          playTone(TONE_REPEAT, 5, 180,80, TONE_ARG_EOL);
-          disconnectWifi();
-      }
-      else if ( thingSpeakConsecutiveFailureCount % MAX_FAILURES_TO_WARN == 0 ) {                    
-          playTone(TONE_SINGLE, 0, 180,80,180,80, TONE_ARG_EOL);
-      }
+      if (thingSpeakConsecutiveFailureCount % MAX_FAILURES_TO_WARN == 0 )          playTone(TONE_REPEAT, 4, 180,80, TONE_ARG_EOL);
+      if (thingSpeakConsecutiveFailureCount % MAX_FAILURES_TO_RECONNECT == 0 )     disconnectWifi();
   }
 }
 
