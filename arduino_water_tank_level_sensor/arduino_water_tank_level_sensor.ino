@@ -187,8 +187,8 @@ void loop() {
 }
 
 void scheduledReboot(){
-  if (getUptimeInHours() >= REBOOT_INTERVAL_HOURS)
-      reboot();
+  //if (getUptimeInHours() >= REBOOT_INTERVAL_HOURS)
+  //    reboot();
 }
 
 void waitTillFirstWaterSignalRead(){
