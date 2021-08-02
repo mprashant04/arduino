@@ -1,4 +1,4 @@
-#define  MAX_FAILURES_TO_WARN         30
+#define  MAX_FAILURES_TO_WARN         60
 #define  MAX_FAILURES_TO_RECONNECT    15
 
 String THINGSPEAK_HOST = "api.thingspeak.com";
