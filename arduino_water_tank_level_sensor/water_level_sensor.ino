@@ -150,19 +150,17 @@ void checkTankLevelAlerts(){
   static char alertType  = 0;
 
   //TODO - skip alert logic for 1 min after startup??
-  
-  float curLevel = waterLevelPercentageEMA;   //todo remove variable, durectly use level value to save memory  
 
-  if (!wasBelowH1 && curLevel < WATER_ALERT_LEVEL_H1 - WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasBelowH1 = true;  alertType = 0;  }
-  if (!wasBelowH2 && curLevel < WATER_ALERT_LEVEL_H2 - WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasBelowH2 = true;  alertType = 0;  }
-  if (!wasAboveL1 && curLevel > WATER_ALERT_LEVEL_L1 + WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasAboveL1 = true;  alertType = 0;  }
-  if (!wasAboveL2 && curLevel > WATER_ALERT_LEVEL_L2 + WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasAboveL2 = true;  alertType = 0;  }
+  if (!wasBelowH1 && waterLevelPercentageEMA < WATER_ALERT_LEVEL_H1 - WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasBelowH1 = true;  alertType = 0;  }
+  if (!wasBelowH2 && waterLevelPercentageEMA < WATER_ALERT_LEVEL_H2 - WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasBelowH2 = true;  alertType = 0;  }
+  if (!wasAboveL1 && waterLevelPercentageEMA > WATER_ALERT_LEVEL_L1 + WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasAboveL1 = true;  alertType = 0;  }
+  if (!wasAboveL2 && waterLevelPercentageEMA > WATER_ALERT_LEVEL_L2 + WATER_ALERT_LEVEL_CROSS_THRESHOLD) {  wasAboveL2 = true;  alertType = 0;  }
 
   //folliwing if sequence is imp
-  if (wasBelowH1 && curLevel > WATER_ALERT_LEVEL_H1) { wasBelowH1 = false;  alertType = 1;  }
-  if (wasBelowH2 && curLevel > WATER_ALERT_LEVEL_H2) { wasBelowH2 = false;  alertType = 2;  }
-  if (wasAboveL1 && curLevel < WATER_ALERT_LEVEL_L1) { wasAboveL1 = false;  alertType = -1; }
-  if (wasAboveL2 && curLevel < WATER_ALERT_LEVEL_L1) { wasAboveL2 = false;  alertType = -2; }
+  if (wasBelowH1 && waterLevelPercentageEMA > WATER_ALERT_LEVEL_H1) { wasBelowH1 = false;  alertType = 1;  }
+  if (wasBelowH2 && waterLevelPercentageEMA > WATER_ALERT_LEVEL_H2) { wasBelowH2 = false;  alertType = 2;  }
+  if (wasAboveL1 && waterLevelPercentageEMA < WATER_ALERT_LEVEL_L1) { wasAboveL1 = false;  alertType = -1; }
+  if (wasAboveL2 && waterLevelPercentageEMA < WATER_ALERT_LEVEL_L1) { wasAboveL2 = false;  alertType = -2; }
 
   waterLevelAlertType = alertType;
 }
