@@ -3,8 +3,6 @@
 char debug_mode_raw_signal = '0';
 char serialDebugMessagingEnabled = '0';
 
-void debugInit(){  
-}
  
  void print(int msg){
     if (!isSerialDebugMessagingEnabled()) return;
