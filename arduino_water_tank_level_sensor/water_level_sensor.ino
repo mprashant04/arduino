@@ -4,7 +4,7 @@
 
 #define   WATER_ALERT_LEVEL_H1                        80      //main tank about to get full
 #define   WATER_ALERT_LEVEL_H2                        95      //solar tank full, overfill detected in main tank
-#define   WATER_ALERT_LEVEL_L1                        35      //main tank about to go empty
+#define   WATER_ALERT_LEVEL_L1                        30      //main tank about to go empty
 #define   WATER_ALERT_LEVEL_L2                        20      //main tank about to go empty
 #define   WATER_ALERT_LEVEL_CROSS_THRESHOLD           1
 #define   WATER_ALERT_TONE_COUNT                      180
@@ -68,13 +68,14 @@ void timerHandler_waterLevelRead(){
     waterLevelSignalValueEMA = (EMA_a * waterLevelSignalValue) + ((1.0 - EMA_a) * waterLevelSignalValueEMA);  
 
       
-  waterLevelPercentage    = 100.0 * (waterLevelSignalValue    - WATER_SIGNAL_MIN) / (WATER_SIGNAL_MAX - WATER_SIGNAL_MIN);
+  waterLevelPercentage    = 100.0 * (waterLevelSignalValue    - WATER_SIGNAL_MIN) / ((WATER_SIGNAL_MAX - WATER_SIGNAL_MIN) * 1.0);
   waterLevelPercentageEMA = 100.0 * (waterLevelSignalValueEMA - WATER_SIGNAL_MIN) / ((WATER_SIGNAL_MAX - WATER_SIGNAL_MIN) * 1.0);
 
 
   //round to single decimal place
   waterLevelSignalValueEMA = round (waterLevelSignalValueEMA * 10.0) / 10.0;
   waterLevelPercentageEMA  = round (waterLevelPercentageEMA  * 10.0) / 10.0;
+  waterLevelPercentage  =    round (waterLevelPercentage     * 10.0) / 10.0;
 
   sum = 0;
   sample_count = 0 - (( (isDebugModeRawSignal() ? READING_FREQUENCY_SIGNAL_DEBUG : READING_FREQUENCY) / TIMER_FREQUENCY) - WATER_LEVEL_SAMPLES_COUNT);
@@ -167,7 +168,7 @@ void checkTankLevelAlerts(){
   if (wasBelowH1 && waterLevelPercentageEMA > WATER_ALERT_LEVEL_H1) { wasBelowH1 = false;  alertType = 1;  }
   if (wasBelowH2 && waterLevelPercentageEMA > WATER_ALERT_LEVEL_H2) { wasBelowH2 = false;  alertType = 2;  }
   if (wasAboveL1 && waterLevelPercentageEMA < WATER_ALERT_LEVEL_L1) { wasAboveL1 = false;  alertType = -1; }
-  if (wasAboveL2 && waterLevelPercentageEMA < WATER_ALERT_LEVEL_L1) { wasAboveL2 = false;  alertType = -2; }
+  if (wasAboveL2 && waterLevelPercentageEMA < WATER_ALERT_LEVEL_L2) { wasAboveL2 = false;  alertType = -2; }
 
   waterLevelAlertType = alertType;
 }

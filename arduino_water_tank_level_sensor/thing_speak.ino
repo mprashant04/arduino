@@ -115,8 +115,8 @@ void buildDataToSend(){
 
   strcat(dc, "&");
   strcat(dc, THINGSPEAK_FIELD_WATER_LEVEL_PERCENTAGE);
-  strcat(dc, "=");
-  itoa (waterLevelPercentage, tmp, 10);
+  strcat(dc, "=");  
+  dtostrf(waterLevelPercentage, 1, 1, tmp);  
   strcat(dc, tmp);
 
   strcat(dc, "&");

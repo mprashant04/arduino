@@ -1,5 +1,5 @@
 //updated from timer functions, hence declaring volatile
-volatile int   waterLevelPercentage      = 0;
+volatile float waterLevelPercentage      = 0;
 volatile int   waterLevelSignalValue     = 0;
 volatile float waterLevelPercentageEMA   = -1;
 volatile float waterLevelSignalValueEMA  = -1;
