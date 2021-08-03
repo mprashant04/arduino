@@ -1,6 +1,6 @@
 //Calibrate these values as per pot signal value at min & max water level, notes maintained in google drive doc. Keep 5-8 points margin above acrual full/empty pot readings
-#define   WATER_SIGNAL_MIN                            270  
-#define   WATER_SIGNAL_MAX                            730
+#define   WATER_SIGNAL_MIN                            255
+#define   WATER_SIGNAL_MAX                            720
 
 #define   WATER_ALERT_LEVEL_H1                        80      //main tank about to get full
 #define   WATER_ALERT_LEVEL_H2                        95      //solar tank full, overfill detected in main tank
