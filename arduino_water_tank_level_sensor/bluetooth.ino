@@ -5,7 +5,8 @@
 
 
 void handleBluetoothCommands(){        
-    String cmd = readBluetoothCommand();            
+  //TODO disabled to diagnore arduino reboot issue, avoid using String type
+/*    String cmd = readBluetoothCommand();            
 
     if (cmd == BT_CMD_TOGGLE_RAW_SIGNAL_DEBUG){
         playCommandTone();
@@ -29,6 +30,7 @@ void handleBluetoothCommands(){
         print(F("Invalid BT Command: "));     
         println(cmd);     
     }
+*/
 }
 
 void playCommandTone(){  
@@ -36,6 +38,7 @@ void playCommandTone(){
     delay(800);
 }
 
+/*
 String readBluetoothCommand(){         
   String s = "";
   if (BTserial.available()){
@@ -44,3 +47,4 @@ String readBluetoothCommand(){
   s.trim();    
   return s;
 }
+*/
