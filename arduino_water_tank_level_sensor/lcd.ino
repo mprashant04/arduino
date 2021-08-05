@@ -110,7 +110,7 @@ void lcdInit(){
 }
 
 
-void lcdTransientMessage(String msg){  
+void lcdTransientMessage(String msg){
   lcdTransientMessage(msg, 0);
 }
 
@@ -189,7 +189,7 @@ void lcdUpdateWaterStatus(){
   
   lastDisplayStatusFlag =  !lastDisplayStatusFlag;   
   
-  lcdPrint(centerAlign(String(round(waterLevelPercentageEMA))+ "%", LCD_WIDTH), 0, 3);  
+  lcdPrint(centerAlign(String(waterLevelPercentageEMA,1)+ "%", LCD_WIDTH), 0, 3);  
   lcdPrint(getBlinkStatusChar(lastDisplayStatusFlag), 18,3); 
 
   switch (waterLevelAlertType){
