@@ -2,8 +2,8 @@
 #define   WATER_SIGNAL_MIN                            260
 #define   WATER_SIGNAL_MAX                            720
 
-#define   WATER_ALERT_LEVEL_H1                        80      //main tank about to get full
-#define   WATER_ALERT_LEVEL_H2                        95      //solar tank full, overfill detected in main tank
+#define   WATER_ALERT_LEVEL_H1                        90      //main tank about to get full
+#define   WATER_ALERT_LEVEL_H2                        102     //solar tank full, overfill detected in main tank
 #define   WATER_ALERT_LEVEL_L1                        30      //main tank about to go empty
 #define   WATER_ALERT_LEVEL_L2                        15      //main tank about to go empty
 #define   WATER_ALERT_LEVEL_CROSS_THRESHOLD           1
