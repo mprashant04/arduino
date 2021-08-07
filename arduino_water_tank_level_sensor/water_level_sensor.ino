@@ -1,13 +1,13 @@
 //Calibrate these values as per pot signal value at min & max water level, notes maintained in google drive doc. Keep 5-8 points margin above acrual full/empty pot readings
-#define   WATER_SIGNAL_MIN                            260
-#define   WATER_SIGNAL_MAX                            720
+#define   WATER_SIGNAL_MIN                                  260
+#define   WATER_SIGNAL_MAX                                  720
 
-#define   WATER_ALERT_LEVEL_H1                        90      //main tank about to get full
-#define   WATER_ALERT_LEVEL_H2                        102     //solar tank full, overfill detected in main tank
-#define   WATER_ALERT_LEVEL_L1                        30      //main tank about to go empty
-#define   WATER_ALERT_LEVEL_L2                        15      //main tank about to go empty
-#define   WATER_ALERT_LEVEL_CROSS_THRESHOLD           1
-#define   WATER_ALERT_TONE_COUNT                      180
+#define   WATER_ALERT_LEVEL_H1                              90      //main tank about to get full
+#define   WATER_ALERT_LEVEL_H2                              102     //solar tank full, overfill detected in main tank
+#define   WATER_ALERT_LEVEL_L1                              30      //main tank about to go empty
+#define   WATER_ALERT_LEVEL_L2                              15      //main tank about to go empty
+#define   WATER_ALERT_LEVEL_CROSS_THRESHOLD                 1
+#define   WATER_ALERT_TONE_COUNT                            300     //5 minutes, assuming each tone duration = 1 sec in code below
 
 #define   WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_SMALL     5
 #define   WATER_LEVEL_SIGNAL_JUMP_ALERT_THRESHOLD_LARGE     15
@@ -15,8 +15,8 @@
 #define   WATER_LEVEL_SAMPLES_COUNT                         20
 #define   WATER_LEVEL_READING_INTERVAL_MS                   1000
 
-#define   READING_FREQUENCY                      1000   //in milli sec
-#define   READING_FREQUENCY_SIGNAL_DEBUG         300    //in milli sec
+#define   READING_FREQUENCY                                 1000   //in milli sec
+#define   READING_FREQUENCY_SIGNAL_DEBUG                    300    //in milli sec
 
 
 // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
