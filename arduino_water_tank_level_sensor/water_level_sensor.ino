@@ -78,7 +78,7 @@ void timerHandler_waterLevelRead(){
   waterLevelPercentage  =    round (waterLevelPercentage     * 10.0) / 10.0;
 
   sum = 0;
-  sample_count = 0 - (( (isDebugModeRawSignal() ? READING_FREQUENCY_SIGNAL_DEBUG : READING_FREQUENCY) / TIMER_FREQUENCY) - WATER_LEVEL_SAMPLES_COUNT);
+  sample_count = 0 - (( (isDebugModeRawSignal() ? READING_FREQUENCY_SIGNAL_DEBUG : READING_FREQUENCY) / TIMER_FREQUENCY) - WATER_LEVEL_SAMPLES_COUNT); //making negative to ensure reading sampling at every defined interval only
       
   
   checkIfDeltaThresholdJumped();
