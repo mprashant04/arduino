@@ -204,7 +204,7 @@ void playWaterTankFillingStartedAlert(){
 
     if (lastStatus != waterTankFillingInProgress){
         lastStatus = waterTankFillingInProgress;
-        if (waterTankFillingInProgress) playTone(TONE_REPEAT, 5, 300,150,300,150,80,80,80,9000, TONE_ARG_EOL);
+        if (waterTankFillingInProgress) playTone(TONE_REPEAT, 10, 300,150,300,150,80,80,80,9000, TONE_ARG_EOL);
     }    
 }
 
