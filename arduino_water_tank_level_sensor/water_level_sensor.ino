@@ -92,7 +92,24 @@ void timerHandler_waterLevelRead(){
 }
 
 void checkIfWaterFillingStarted(){
-  
+    static float lastValue = -1;
+    static unsigned char fillCounter = 0;
+    
+    if (waterLevelReadingCount % 5 != 0) return;   //check every fifth reading taken, i.e. every 5 sec if reading frequency is 1 sec   
+    
+    if (lastValue < 0) lastValue = waterLevelSignalValueEMA;   //first time initiation        
+
+    if (waterLevelSignalValueEMA > lastValue){
+        fillCounter++;
+        if (fillCounter > 5){  //water tank filling has started....            
+            waterTankFillingInProgress = true;
+        }
+    }       
+    else{
+        fillCounter = 0;
+        waterTankFillingInProgress = false;
+    }
+    lastValue = waterLevelSignalValueEMA;
 }
 
 
@@ -180,6 +197,15 @@ void playWaterLevelAlertIfAny(){
               break;        
       }    
   }    
+}
+
+void playWaterTankFillingStartedAlert(){
+    static boolean lastStatus = false;
+
+    if (lastStatus != waterTankFillingInProgress){
+        lastStatus = waterTankFillingInProgress;
+        if (waterTankFillingInProgress) playTone(TONE_REPEAT, 5, 300,150,300,150,80,80,80,7000, TONE_ARG_EOL);
+    }    
 }
 
 

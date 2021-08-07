@@ -13,4 +13,6 @@ void initTimers(){
   ITimer1.init();
   if (!ITimer1.attachInterruptInterval(TIMER_FREQUENCY, timerFunction ))
       haltProgram(F("Timer Error!!")); //some issue in initiating timer, halt program...    
+
+  delay(500);
 }

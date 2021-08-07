@@ -177,6 +177,7 @@ void loop() {
   if (isWaterReadingUpdated(true)){
       lcdUpdateWaterStatus();
       playWaterLevelAlertIfAny();
+      playWaterTankFillingStartedAlert();
   }
   
   if (isDebugModeRawSignal())

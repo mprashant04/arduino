@@ -133,7 +133,7 @@ void lcdTransientMessageClear(){
 void lcdWelcomeMessage(){    
   lcdPrint(F("INITIATING..."), 4, 1);  
   playTone(TONE_SINGLE, 0, 150, TONE_ARG_EOL); 
-  
+
   for (int i = 20; i > 0 ; i--){
     lcdPrint(String (i) + "     ", 9, 3);
     delay (1000);
@@ -189,7 +189,7 @@ void lcdUpdateWaterStatus(){
   
   lastDisplayStatusFlag =  !lastDisplayStatusFlag;   
   
-  lcdPrint(centerAlign(String(waterLevelPercentageEMA,1)+ "%", LCD_WIDTH), 0, 3);  
+  lcdPrint(centerAlign((waterTankFillingInProgress?"▲":"") + String(waterLevelPercentageEMA,1)+ "%", LCD_WIDTH), 0, 3);  
   lcdPrint(getBlinkStatusChar(lastDisplayStatusFlag), 18,3); 
 
   switch (waterLevelAlertType){
@@ -200,7 +200,6 @@ void lcdUpdateWaterStatus(){
       case -2:   lcdPrint(F("L2"), 0,3);   break;
       default:   lcdPrint(F("??"), 0,3);   break;
   }
-  
 }
 
 String getBlinkStatusChar(boolean lastDisplayStatusFlag){
