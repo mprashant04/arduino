@@ -84,32 +84,18 @@ void timerHandler_waterLevelRead(){
   checkIfDeltaThresholdJumped();
   checkIfSafeRangeCrossed();
   checkTankLevelAlerts();
+  checkIfWaterFillingStarted();
 
   
   waterLevelReadingCount++;
   logLevels();  
 }
 
-void logLevels(){
-  if (!isSerialDebugMessagingEnabled()) return;
+void checkIfWaterFillingStarted(){
   
-  print(F("\n=============== "));
-  print(waterLevelPercentageEMA ); 
-  print(F("/")); 
-  print(waterLevelPercentage ); 
-  print(F("%")); 
-  print(F("    ")); 
-  print(F("(")); 
-  print(waterLevelSignalValueEMA); 
-  print(F("/")); 
-  print(waterLevelSignalValue); 
-  print(F(")")); 
-  print(F("        ")); 
-  print(waterLevelSignalThresholdJumpCount_Large); 
-  print(F("/")); 
-  print(waterLevelSignalThresholdJumpCount_Small);   
-  println(F(" "));  
 }
+
+
 
 void checkIfDeltaThresholdJumped(){
   static int lastValue = -1;
@@ -206,4 +192,27 @@ boolean isWaterReadingUpdated(boolean resetStatusIfChanged){
       return true;
   }
   return false;
+}
+
+
+
+void logLevels(){
+  if (!isSerialDebugMessagingEnabled()) return;
+  
+  print(F("\n=============== "));
+  print(waterLevelPercentageEMA ); 
+  print(F("/")); 
+  print(waterLevelPercentage ); 
+  print(F("%")); 
+  print(F("    ")); 
+  print(F("(")); 
+  print(waterLevelSignalValueEMA); 
+  print(F("/")); 
+  print(waterLevelSignalValue); 
+  print(F(")")); 
+  print(F("        ")); 
+  print(waterLevelSignalThresholdJumpCount_Large); 
+  print(F("/")); 
+  print(waterLevelSignalThresholdJumpCount_Small);   
+  println(F(" "));  
 }
