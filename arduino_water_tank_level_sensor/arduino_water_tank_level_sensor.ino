@@ -1,4 +1,4 @@
-/*
+d/*
  * Install all required libraries first:
  *    - Sketch -> include library -> add .zip library -> select D:\_my_cloud_synced\softwares\_Development\Arduino\_Development libraries\xxx.zip
  * 
@@ -15,10 +15,10 @@
  * 06 D6  - 
  * 07 D7  - 
  * 08 D8  - 
- * 09 D9  - Buzzer (big 5v exernal trigged using opticpupler)
- * 10 D10 - <available on female header pin for easy connect>
- * 11 D11 - <available on female header pin for easy connect>
- * 12 D12 - <available on female header pin for easy connect>   Buzzer (small)
+ * 09 D9  -  
+ * 10 D10 - 
+ * 11 D11 - 
+ * 12 D12 - Buzzer
  * 13     - 
  * 14 A0  - POT signal
  * 15 A1  - 

@@ -1,4 +1,4 @@
-#define BUZZER_PIN                  9
+#define BUZZER_PIN                  12
 #define TONES_ARR_SIZE              20
 
 volatile int      tones[TONES_ARR_SIZE];

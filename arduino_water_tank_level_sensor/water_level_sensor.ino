@@ -46,9 +46,9 @@ void timerHandler_waterLevelRead(){
   if (sample_count < WATER_LEVEL_SAMPLES_COUNT){            
       if (sample_count >= 0){
           if (isDebugModeRawSignal())
-              sum = analogRead(A0) * WATER_LEVEL_SAMPLES_COUNT;  //read raw signal, no sampling and averating
+              sum = analogRead(A2) * WATER_LEVEL_SAMPLES_COUNT;  //read raw signal, no sampling and averating
           else
-              sum += analogRead(A0);
+              sum += analogRead(A2);
       }
       else{
           //wait state...
