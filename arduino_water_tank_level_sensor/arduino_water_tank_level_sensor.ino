@@ -1,4 +1,4 @@
-d/*
+/*
  * Install all required libraries first:
  *    - Sketch -> include library -> add .zip library -> select D:\_my_cloud_synced\softwares\_Development\Arduino\_Development libraries\xxx.zip
  * 

@@ -6,6 +6,7 @@
 
 void handleBluetoothCommands(){        
   //TODO disabled to diagnore arduino reboot issue, avoid using String type
+  //TODO is enabling bluetoioth command reading failing remote firmware upgrade??? 
 /*    String cmd = readBluetoothCommand();            
 
     if (cmd == BT_CMD_TOGGLE_RAW_SIGNAL_DEBUG){
