@@ -240,5 +240,7 @@ void logLevels(){
   print(waterLevelSignalThresholdJumpCount_Large); 
   print(F("/")); 
   print(waterLevelSignalThresholdJumpCount_Small);   
-  println(F(" "));  
+  print(F(", ")); 
+  print(getUptimeInMinutes());   
+  println(F("min"));  
 }
