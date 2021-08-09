@@ -98,7 +98,8 @@ void checkIfWaterFillingStarted(){
     static int lastValue = -1;
     static unsigned char fillCounter = 0;
     
-    if (waterLevelReadingCount % TANK_FILL_CHECK_READING_FREQUENCY != 0) return;   
+    if (waterLevelReadingCount % TANK_FILL_CHECK_READING_FREQUENCY != 0) return;
+    if (getUptimeInMinutes() < 3.0) return;  //let signal stabilize in first few minutes after boot
     
     if (lastValue < 0) lastValue = waterLevelSignalValue;   //first time initiation        
 
@@ -245,10 +246,12 @@ void logLevels(){
   print(F("/")); 
   print(waterLevelSignalValue); 
   print(F(")")); 
-  print(F("        ")); 
+  print(F("    ")); 
   print(waterLevelSignalThresholdJumpCount_Large); 
   print(F("/")); 
   print(waterLevelSignalThresholdJumpCount_Small);   
+  print(F("/")); 
+  print(waterTankFillingInProgress);  
   print(F(", ")); 
   print(getUptimeInMinutes());   
   println(F("min"));  
