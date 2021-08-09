@@ -210,7 +210,7 @@ void playWaterTankFillingStartedAlert(){
         if (waterTankFillingInProgress) 
           playTone(TONE_REPEAT, 10, 300,150,300,150,80,80,80,9000, TONE_ARG_EOL);
         else
-          playTone(TONE_REPEAT, 3, 80,80,80,500,80,80,80,9000, TONE_ARG_EOL);
+          playTone(TONE_REPEAT, 3, 80,80,250,500,80,80,250,9000, TONE_ARG_EOL);
     }
 }
 

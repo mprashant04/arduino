@@ -5,11 +5,8 @@
 
 
 void handleBluetoothCommands(){        
-  //TODO disabled to diagnore arduino reboot issue, avoid using String type
-  //TODO is enabling bluetoioth command reading failing remote firmware upgrade??? 
-
-    //*********** comand handling disabled temporarily, and BT logs kept always on, make default off later once wifi fixed *************
-    return;
+  
+    //return;
   
     String cmd = readBluetoothCommand();            
 
