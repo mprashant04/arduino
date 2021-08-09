@@ -106,11 +106,15 @@ void checkIfWaterFillingStarted(){
         fillCounter++;
         if (fillCounter >= TANK_FILL_CHECK_CONSECUTIVE_UP_CHECKS){  //water tank filling has started....
             waterTankFillingInProgress = true;
+            fillCounter = TANK_FILL_CHECK_CONSECUTIVE_UP_CHECKS;
         }
-    }       
+    }
     else{
-        fillCounter = 0;
-        waterTankFillingInProgress = false;
+        fillCounter--;
+        if (fillCounter <= 0){  //water tank filling stopped
+            waterTankFillingInProgress = false;
+            fillCounter = 0;
+        }
     }
     lastValue = waterLevelSignalValue;
 }
@@ -210,7 +214,7 @@ void playWaterTankFillingStartedAlert(){
         if (waterTankFillingInProgress) 
           playTone(TONE_REPEAT, 10, 300,150,300,150,80,80,80,9000, TONE_ARG_EOL);
         else
-          playTone(TONE_REPEAT, 2, 80,80,250,500,80,80,250,5000, TONE_ARG_EOL);
+          playTone(TONE_REPEAT, 1, 80,80,250,500,80,80,250,5000, TONE_ARG_EOL);
     }
 }
 
