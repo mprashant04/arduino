@@ -230,7 +230,7 @@ boolean isWaterReadingUpdated(boolean resetStatusIfChanged){
 void logLevels(){
   if (!isSerialDebugMessagingEnabled()) return;
   
-  print(F("\n=============== "));
+  print(F("======= "));
   print(waterLevelPercentageEMA ); 
   print(F("/")); 
   print(waterLevelPercentage ); 
