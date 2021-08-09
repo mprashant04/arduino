@@ -97,7 +97,7 @@ void timerHandler_waterLevelRead(){
 
 void checkIfWaterFillingStarted(){
     static int lastValue = -1;
-    static unsigned char fillCounter = 0;
+    static char fillCounter = 0;
     
     if (waterLevelReadingCount % TANK_FILL_CHECK_READING_FREQUENCY != 0) return;
     if (getUptimeInMinutes() < 3.0) return;  //let signal stabilize in first few minutes after boot
