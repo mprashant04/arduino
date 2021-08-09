@@ -18,6 +18,9 @@
 #define   READING_FREQUENCY                                 1000   //in milli sec
 #define   READING_FREQUENCY_SIGNAL_DEBUG                    300    //in milli sec
 
+#define   TANK_FILL_CHECK_READING_FREQUENCY                 10     //check every Xth reading taken, i.e. every 10 sec if main reading frequency is 1 sec and this var value is 10
+#define   TANK_FILL_CHECK_CONSECUTIVE_UP_CHECKS             4     
+
 
 // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
 // EMA alpha factor, between 0 and 1. Finetune as needed. Lower the value, more samples will be used for averaging, i.e. slower response
@@ -92,16 +95,16 @@ void timerHandler_waterLevelRead(){
 }
 
 void checkIfWaterFillingStarted(){
-    static float lastValue = -1;
+    static int lastValue = -1;
     static unsigned char fillCounter = 0;
     
-    if (waterLevelReadingCount % 5 != 0) return;   //check every fifth reading taken, i.e. every 5 sec if reading frequency is 1 sec   
+    if (waterLevelReadingCount % TANK_FILL_CHECK_READING_FREQUENCY != 0) return;   
     
-    if (lastValue < 0) lastValue = waterLevelSignalValueEMA;   //first time initiation        
+    if (lastValue < 0) lastValue = waterLevelSignalValue;   //first time initiation        
 
-    if (waterLevelSignalValueEMA > lastValue){
+    if (waterLevelSignalValue > lastValue){
         fillCounter++;
-        if (fillCounter > 5){  //water tank filling has started....            
+        if (fillCounter >= TANK_FILL_CHECK_CONSECUTIVE_UP_CHECKS){  //water tank filling has started....
             waterTankFillingInProgress = true;
         }
     }       
@@ -109,7 +112,7 @@ void checkIfWaterFillingStarted(){
         fillCounter = 0;
         waterTankFillingInProgress = false;
     }
-    lastValue = waterLevelSignalValueEMA;
+    lastValue = waterLevelSignalValue;
 }
 
 
