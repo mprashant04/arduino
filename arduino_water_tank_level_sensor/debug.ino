@@ -1,7 +1,7 @@
 
 // make 1 to enable, 0 = disable
 char debug_mode_raw_signal = '0';
-char serialDebugMessagingEnabled = '0';
+char serialDebugMessagingEnabled = '1';
 
  
  void print(int msg){
