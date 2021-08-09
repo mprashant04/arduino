@@ -18,8 +18,9 @@
 #define   READING_FREQUENCY                                 1000   //in milli sec
 #define   READING_FREQUENCY_SIGNAL_DEBUG                    300    //in milli sec
 
-#define   TANK_FILL_CHECK_READING_FREQUENCY                 10     //check every Xth reading taken, i.e. every 10 sec if main reading frequency is 1 sec and this var value is 10
-#define   TANK_FILL_CHECK_CONSECUTIVE_UP_CHECKS             5
+#define   TANK_FILL_CHECK_READING_FREQUENCY                 15     //check every Xth reading taken, i.e. every 10 sec if main reading frequency is 1 sec and this var value is 10
+#define   TANK_FILL_CHECK_CONSECUTIVE_CHECKS_UP             6
+#define   TANK_FILL_CHECK_CONSECUTIVE_CHECKS_DOWN           12
 
 
 // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
@@ -105,9 +106,9 @@ void checkIfWaterFillingStarted(){
 
     if (waterLevelSignalValue > lastValue + 1){
         fillCounter++;
-        if (fillCounter >= TANK_FILL_CHECK_CONSECUTIVE_UP_CHECKS){  //water tank filling has started....
+        if (fillCounter >= TANK_FILL_CHECK_CONSECUTIVE_CHECKS_UP){  //water tank filling has started....
             waterTankFillingInProgress = true;
-            fillCounter = TANK_FILL_CHECK_CONSECUTIVE_UP_CHECKS;
+            fillCounter = TANK_FILL_CHECK_CONSECUTIVE_CHECKS_DOWN;
         }
     }
     else{
@@ -117,6 +118,20 @@ void checkIfWaterFillingStarted(){
             fillCounter = 0;
         }
     }
+
+    print (F("*** rc="));
+    print (waterLevelReadingCount);
+    print (F(", last="));
+    print (lastValue);
+    print (F(", sig="));
+    print (waterLevelSignalValue);
+    print (F(", fc="));
+    print (fillCounter);
+    print (F(", filling="));
+    print (waterTankFillingInProgress);
+    
+    println (F(" "));
+    
     lastValue = waterLevelSignalValue;
 }
 
