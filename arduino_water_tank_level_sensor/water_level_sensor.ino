@@ -104,7 +104,7 @@ void checkIfWaterFillingStarted(){
     
     if (lastValue < 0) lastValue = waterLevelSignalValue;   //first time initiation        
 
-    if (waterLevelSignalValue > lastValue + 1){
+    if (waterLevelSignalValue > lastValue + 0){
         fillCounter++;
         if (fillCounter >= TANK_FILL_CHECK_CONSECUTIVE_CHECKS_UP){  //water tank filling has started....
             waterTankFillingInProgress = true;
@@ -230,7 +230,7 @@ void playWaterTankFillingStartedAlert(){
         if (waterTankFillingInProgress) 
           playTone(TONE_REPEAT, 10, 300,150,300,150,80,80,80,9000, TONE_ARG_EOL);
         else
-          playTone(TONE_REPEAT, 1, 80,80,250,500,80,80,250,5000, TONE_ARG_EOL);
+          playTone(TONE_REPEAT, 2, 80,80,250,500,80,80,250,5000, TONE_ARG_EOL);
     }
 }
 
