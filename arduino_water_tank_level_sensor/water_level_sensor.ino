@@ -19,7 +19,7 @@
 #define   READING_FREQUENCY_SIGNAL_DEBUG                    300    //in milli sec
 
 #define   TANK_FILL_CHECK_READING_FREQUENCY                 15     //check every Xth reading taken, i.e. every 10 sec if main reading frequency is 1 sec and this var value is 10
-#define   TANK_FILL_CHECK_CONSECUTIVE_CHECKS_UP             6
+#define   TANK_FILL_CHECK_CONSECUTIVE_CHECKS_UP             5
 #define   TANK_FILL_CHECK_CONSECUTIVE_CHECKS_DOWN           12
 
 
