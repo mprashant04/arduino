@@ -182,8 +182,8 @@ void loop() {
   
   if (isDebugModeRawSignal())
     delay (500);
-  //else                      //disabled temporarily till 3.3v supply get delviered and installed
-  //  thingSpeakSendData();    
+  else
+    thingSpeakSendData();
   
   scheduledReboot(); 
 }
