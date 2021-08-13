@@ -6,8 +6,8 @@
  *      P  I  N  S
  * ============================
  * Pinout diagram: https://upload.wikimedia.org/wikipedia/commons/e/e4/Arduino-nano-pinout.png
- * 00 RXD - BT HC 05 TX  -- optional choice, using jumper on PCB
- * 01 TXD - BT HC 05 RX  -- optional choice, using jumper on PCB
+ * 00 RXD - BT HC 05 TX
+ * 01 TXD - BT HC 05 RX
  * 02 D2  - Wifi RX
  * 03 D3  - Wifi TX
  * 04 D4  - Wifi reset (via opto-coupler)
@@ -18,12 +18,12 @@
  * 09 D9  -  
  * 10 D10 - 
  * 11 D11 - 
- * 12 D12 - Buzzer
+ * 12 D12 - 
  * 13     - 
- * 14 A0  - POT signal
+ * 14 A0  - Buzzer
  * 15 A1  - 
- * 16 A2  - software serial RX (only if using the BT device)  -- optional choice, using jumper on PCB
- * 17 A3  - software serial TX (only if using the BT device)  -- optional choice, using jumper on PCB
+ * 16 A2  - POT signal
+ * 17 A3  - 
  * 18 A4  - LCD i2c SDA
  * 19 A5  - LCD i2c SLC
  * 20 A6  - Do NOT use, something different with this pin in pinout than other pins, misbehaves

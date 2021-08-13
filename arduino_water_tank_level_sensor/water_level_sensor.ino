@@ -1,3 +1,5 @@
+#define   WATER_SENSOR_PIN                                  A2
+
 //Calibrate these values as per pot signal value at min & max water level, notes maintained in google drive doc. Keep 5-8 points margin above acrual full/empty pot readings
 #define   WATER_SIGNAL_MIN                                  260
 #define   WATER_SIGNAL_MAX                                  720
@@ -50,9 +52,9 @@ void timerHandler_waterLevelRead(){
   if (sample_count < WATER_LEVEL_SAMPLES_COUNT){            
       if (sample_count >= 0){
           if (isDebugModeRawSignal())
-              sum = analogRead(A2) * WATER_LEVEL_SAMPLES_COUNT;  //read raw signal, no sampling and averating
+              sum = analogRead(WATER_SENSOR_PIN) * WATER_LEVEL_SAMPLES_COUNT;  //read raw signal, no sampling and averating
           else
-              sum += analogRead(A2);
+              sum += analogRead(WATER_SENSOR_PIN);
       }
       else{
           //wait state...
