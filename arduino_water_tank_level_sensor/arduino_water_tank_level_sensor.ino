@@ -158,7 +158,8 @@ void setup() {
 
   initTimers();  //tones will work only after this...
 
-  println(F("\n********* BOOT **********  v1.3"), true);  
+  //println(F("\n********* BOOT **********  v1.4"), true); 
+  println (F("******** BOOT ******** (Built on " __DATE__ " at " __TIME__")"), true); 
     
   lcdInit();
   wifiInit();
