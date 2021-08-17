@@ -34,3 +34,13 @@ void haltProgram(String lcdMessage){
       delay(1000);
   }
 }
+
+float roundNumber (float number, unsigned int decimalPlaces){
+  float multiplier = 1.0;
+
+  while (decimalPlaces  > 0) {     
+      multiplier = multiplier * 10.0;
+      decimalPlaces--;
+  }
+  return round (number * multiplier) / multiplier;     
+}

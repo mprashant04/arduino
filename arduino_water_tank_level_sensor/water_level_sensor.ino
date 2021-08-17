@@ -68,7 +68,7 @@ void timerHandler_waterLevelRead(){
   }
 
   //------ reading sampling done  -----------------------------------------------
-  float EMA_a = waterTankFillingInProgress ? EMA_A_WHILE_FILLING : EMA_A_WHILE_NOT_FILLING;
+  float EMA_a = roundNumber(waterTankFillingInProgress ? EMA_A_WHILE_FILLING : EMA_A_WHILE_NOT_FILLING, 3);
   
   waterLevelSignalValue = sum / WATER_LEVEL_SAMPLES_COUNT;
   if (waterLevelSignalValueEMA == -1)
@@ -82,9 +82,9 @@ void timerHandler_waterLevelRead(){
 
 
   //round to single decimal place
-  waterLevelSignalValueEMA = round (waterLevelSignalValueEMA * 10.0) / 10.0;
-  waterLevelPercentageEMA  = round (waterLevelPercentageEMA  * 10.0) / 10.0;
-  waterLevelPercentage  =    round (waterLevelPercentage     * 10.0) / 10.0;
+  waterLevelSignalValueEMA = roundNumber (waterLevelSignalValueEMA , 1);
+  waterLevelPercentageEMA  = roundNumber (waterLevelPercentageEMA , 1);
+  waterLevelPercentage  =    roundNumber (waterLevelPercentage , 1);
 
   sum = 0;
   sample_count = 0 - (( (isDebugModeRawSignal() ? READING_FREQUENCY_SIGNAL_DEBUG : READING_FREQUENCY) / TIMER_FREQUENCY) - WATER_LEVEL_SAMPLES_COUNT); //making negative to ensure reading sampling at every defined interval only
