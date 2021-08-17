@@ -29,12 +29,18 @@ char serialDebugMessagingEnabled = '0';
     println(String(msg));
  }
  void print(String msg){
-    if (!isSerialDebugMessagingEnabled()) return;
+    print(msg, false);
+ }
+ void print(String msg, boolean force){
+    if (!isSerialDebugMessagingEnabled() && !force) return;
     if (BT_CONNECTED_TO_SERIAL_PINS == false)      Serial.print(msg);        
     BTserial.print(msg);           
- } 
+ }
  void println(String msg){
-    if (!isSerialDebugMessagingEnabled()) return;
+    println(msg, false);
+ }
+ void println(String msg, boolean force){
+    if (!isSerialDebugMessagingEnabled() && !force) return;
     if (BT_CONNECTED_TO_SERIAL_PINS == false)      Serial.println(msg);    
     BTserial.println(msg);           
  }

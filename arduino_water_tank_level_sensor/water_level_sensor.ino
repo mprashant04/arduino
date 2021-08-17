@@ -27,8 +27,8 @@
 
 // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
 // EMA alpha factor, between 0 and 1. Finetune as needed. Lower the value, more samples will be used for averaging, i.e. slower response
-#define   EMA_A_WHILE_FILLING                             0.07  //use faster sampling while tank is being filled since filling singla change rate is faster than no-filling signal change rate, and we need to give on time alert when tank about to get full
-#define   EMA_A_WHILE_NOT_FILLING                         0.02
+#define   EMA_A_WHILE_FILLING                             0.070  //use faster sampling while tank is being filled since filling singla change rate is faster than no-filling signal change rate, and we need to give on time alert when tank about to get full
+#define   EMA_A_WHILE_NOT_FILLING                         0.010
 
 unsigned long levelAlertStartedOn = UNSIGNED_LONG_MAX;
 
