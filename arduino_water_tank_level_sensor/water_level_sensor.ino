@@ -68,23 +68,22 @@ void timerHandler_waterLevelRead(){
   }
 
   //------ reading sampling done  -----------------------------------------------
-  float EMA_a = roundNumber(waterTankFillingInProgress ? EMA_A_WHILE_FILLING : EMA_A_WHILE_NOT_FILLING, 3);
-  
   waterLevelSignalValue = sum / WATER_LEVEL_SAMPLES_COUNT;
+  
   if (waterLevelSignalValueEMA == -1)
     waterLevelSignalValueEMA = waterLevelSignalValue;  //first time initiation
-  else
-    waterLevelSignalValueEMA = (EMA_a * waterLevelSignalValue) + ((1.0 - EMA_a) * waterLevelSignalValueEMA);  
-
+  else{
+    float EMA_a = roundNumber(waterTankFillingInProgress ? EMA_A_WHILE_FILLING : EMA_A_WHILE_NOT_FILLING, 3);
+    waterLevelSignalValueEMA = (EMA_a * waterLevelSignalValue) + ((1.0 - EMA_a) * waterLevelSignalValueEMA);      
+    waterLevelSignalValueEMA = roundNumber (waterLevelSignalValueEMA, 1);
+  }
       
   waterLevelPercentage    = 100.0 * (waterLevelSignalValue    - WATER_SIGNAL_MIN) / ((WATER_SIGNAL_MAX - WATER_SIGNAL_MIN) * 1.0);
   waterLevelPercentageEMA = 100.0 * (waterLevelSignalValueEMA - WATER_SIGNAL_MIN) / ((WATER_SIGNAL_MAX - WATER_SIGNAL_MIN) * 1.0);
 
-
-  //round to single decimal place
-  waterLevelSignalValueEMA = roundNumber (waterLevelSignalValueEMA , 1);
+  waterLevelPercentage     = roundNumber (waterLevelPercentage , 1);
   waterLevelPercentageEMA  = roundNumber (waterLevelPercentageEMA , 1);
-  waterLevelPercentage  =    roundNumber (waterLevelPercentage , 1);
+  
 
   sum = 0;
   sample_count = 0 - (( (isDebugModeRawSignal() ? READING_FREQUENCY_SIGNAL_DEBUG : READING_FREQUENCY) / TIMER_FREQUENCY) - WATER_LEVEL_SAMPLES_COUNT); //making negative to ensure reading sampling at every defined interval only
@@ -232,8 +231,9 @@ void playWaterTankFillingStartedAlert(){
 
     if (lastStatus != waterTankFillingInProgress){
         lastStatus = waterTankFillingInProgress;
+        
         if (waterTankFillingInProgress) playTone(TONE_REPEAT, 10, 300,150,300,150,80,80,80,9000, TONE_ARG_EOL);
-        //else  playTone(TONE_REPEAT, 2, 80,80,250,500,80,80,250,5000, TONE_ARG_EOL);
+        else  playTone(TONE_REPEAT, 2, 80,80,250,500,80,80,250,5000, TONE_ARG_EOL);
     }
 }
 
