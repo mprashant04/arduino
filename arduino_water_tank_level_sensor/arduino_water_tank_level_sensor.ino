@@ -43,6 +43,7 @@
  *    - more ref examples?? - https://github.com/mathworks/thingspeak-arduino 
  *    - esp8266 cannot be connected to arduino 3.3v pin, arduino cannot provide required current for it
  *    - for serial mode AT commands, tx/rx needs to connected to tx/rx0 of arduino, for regular run they can be on data pins
+ *    - External antenna wire - https://community.openhab.org/t/esp8266-antenna-mod-extend-wifi-range/78982
  * 
  * LCD notes
  *    - Ref: https://www.makerguides.com/character-i2c-lcd-arduino-tutorial/
