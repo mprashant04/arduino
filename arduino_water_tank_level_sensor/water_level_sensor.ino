@@ -21,8 +21,8 @@
 #define   READING_FREQUENCY_SIGNAL_DEBUG                    300    //in milli sec
 
 #define   TANK_FILL_CHECK_READING_FREQUENCY                 15     //check every Xth reading taken, i.e. every 10 sec if main reading frequency is 1 sec and this var value is 10
-#define   TANK_FILL_CHECK_CONSECUTIVE_CHECKS_UP             5
-#define   TANK_FILL_CHECK_CONSECUTIVE_CHECKS_DOWN           12
+#define   TANK_FILL_CHECKS_UP             					5
+#define   TANK_FILL_CHECKS_DOWN           					12
 
 
 // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
@@ -100,35 +100,42 @@ void timerHandler_waterLevelRead(){
 }
 
 void checkIfWaterFillingStarted(){
-    static int lastValue = -1;
+    static float lastValue = -1;
     static char fillCounter = 0;
     
     if (waterLevelReadingCount % TANK_FILL_CHECK_READING_FREQUENCY != 0) return;
     if (getUptimeInMinutes() < 3.0) return;  //let signal stabilize in first few minutes after boot
-    
-    if (lastValue < 0) lastValue = waterLevelSignalValue;   //first time initiation        
 
-    if (waterLevelSignalValue > lastValue + 0){
+	//use signal EMA to check down move, and raw signal to check up move
+	//not using ema to check up move, since if there is signal spike, ema keeps going in that direction for some time even if signal spike is settled giving false tank-filling signal
+    float signal = waterTankFillingInProgress ? waterLevelSignalValueEMA : waterLevelSignalValue;  
+    
+    if (lastValue < 0) lastValue = signal;   //first time initiation        
+
+    if (signal > lastValue + 0){
         fillCounter++;
-        if (fillCounter >= TANK_FILL_CHECK_CONSECUTIVE_CHECKS_UP){  //water tank filling has started....
+        if (fillCounter >= TANK_FILL_CHECKS_UP && !waterTankFillingInProgress){  //water tank filling has started....
             waterTankFillingInProgress = true;
-            fillCounter = TANK_FILL_CHECK_CONSECUTIVE_CHECKS_DOWN;
-        }
+            fillCounter = TANK_FILL_CHECKS_DOWN;
+        }        
     }
     else{
         fillCounter--;
         if (fillCounter <= 0){  //water tank filling stopped
-            waterTankFillingInProgress = false;
-            fillCounter = 0;
+            waterTankFillingInProgress = false;            
         }
     }
+
+    if (fillCounter > TANK_FILL_CHECKS_DOWN)  fillCounter = TANK_FILL_CHECKS_DOWN;
+    if (fillCounter < 0)                      fillCounter = 0;
+        
 
     print (F("*** rc="));
     print (waterLevelReadingCount);
     print (F(", last="));
     print (lastValue);
     print (F(", sig="));
-    print (waterLevelSignalValue);
+    print (signal);
     print (F(", fc="));
     print (fillCounter);
     print (F(", filling="));
@@ -136,7 +143,7 @@ void checkIfWaterFillingStarted(){
     
     println (F(" "));
     
-    lastValue = waterLevelSignalValue;
+    lastValue = signal;
 }
 
 
