@@ -130,8 +130,15 @@ void lcdTransientMessageClear(){
   lcdPrint(F("                    "), LCD_TRANSIENT_MESSAGE_COL, LCD_TRANSIENT_MESSAGE_ROW);
 }
 
-void lcdWelcomeMessage(){    
-  lcdPrint(F("INITIATING..."), 4, 1);  
+void lcdWelcomeMessage(){
+  lcdPrint(F("--------------------"), 0, 0);
+  lcdPrint(F(__DATE__ " " __TIME__),  0, 1);    //sketch build date and time
+  lcdPrint(F("--------------------"), 0, 2); 
+  
+  //delay (2000);
+  //lcdClear();  
+      
+  //lcdPrint(F("INITIATING..."), 4, 1);  
   playTone(TONE_SINGLE, 0, 150, TONE_ARG_EOL); 
 
   for (int i = 20; i > 0 ; i--){
