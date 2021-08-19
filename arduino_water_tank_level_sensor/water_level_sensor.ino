@@ -21,13 +21,13 @@
 #define   READING_FREQUENCY_SIGNAL_DEBUG                    300    //in milli sec
 
 #define   TANK_FILL_CHECK_READING_FREQUENCY                 15     //check every Xth reading taken, i.e. every 10 sec if main reading frequency is 1 sec and this var value is 10
-#define   TANK_FILL_CHECKS_UP             					5
-#define   TANK_FILL_CHECKS_DOWN           					12
+#define   TANK_FILL_CHECKS_UP             					        5
+#define   TANK_FILL_CHECKS_DOWN           					        12
 
 
 // https://www.norwegiancreations.com/2015/10/tutorial-potentiometers-with-arduino-and-filtering/
 // EMA alpha factor, between 0 and 1. Finetune as needed. Lower the value, more samples will be used for averaging, i.e. slower response
-#define   EMA_A_WHILE_FILLING                             0.070  //use faster sampling while tank is being filled since filling singla change rate is faster than no-filling signal change rate, and we need to give on time alert when tank about to get full
+#define   EMA_A_WHILE_FILLING                             0.099  //use faster sampling while tank is being filled since filling singla change rate is faster than no-filling signal change rate, and we need to give on time alert when tank about to get full
 #define   EMA_A_WHILE_NOT_FILLING                         0.010
 
 unsigned long levelAlertStartedOn = UNSIGNED_LONG_MAX;
@@ -100,7 +100,7 @@ void timerHandler_waterLevelRead(){
 }
 
 void checkIfWaterFillingStarted(){
-    static float lastValue = -1;
+    static int lastValue = -1;
     static char fillCounter = 0;
     
     if (waterLevelReadingCount % TANK_FILL_CHECK_READING_FREQUENCY != 0) return;
@@ -108,7 +108,7 @@ void checkIfWaterFillingStarted(){
 
 	//use signal EMA to check down move, and raw signal to check up move
 	//not using ema to check up move, since if there is signal spike, ema keeps going in that direction for some time even if signal spike is settled giving false tank-filling signal
-    float signal = waterTankFillingInProgress ? waterLevelSignalValueEMA : waterLevelSignalValue;  
+    int signal = waterTankFillingInProgress ? round(waterLevelSignalValueEMA) : waterLevelSignalValue;  
     
     if (lastValue < 0) lastValue = signal;   //first time initiation        
 
