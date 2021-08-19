@@ -1,8 +1,7 @@
 #define WIFI_RESET_PIN      4
 #define AT_CMD_RST          "AT+RST"
 #define AT_CMD_CWMODE       "AT+CWMODE=1"
-#define AT_CMD_CWGAP        "AT+CWJAP=\"home06_3\",\"trGsdu457SWydgbdyjYUfj758UF\""   //add here wifi SSID and password
-
+#define AT_CMD_CWGAP        "AT+CWJAP=\"home06_2\",\"HomeZeroSixWifi345368vix\""   //add here wifi SSID and password
 
 #define MSG_WIFI_RESET      "  Wifi Reset.."
 
