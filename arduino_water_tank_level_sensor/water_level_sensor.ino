@@ -100,15 +100,14 @@ void timerHandler_waterLevelRead(){
 }
 
 void checkIfWaterFillingStarted(){
-    static int lastValue = -1;
+    static float lastValue = -1;
     static char fillCounter = 0;
     
     if (waterLevelReadingCount % TANK_FILL_CHECK_READING_FREQUENCY != 0) return;
     if (getUptimeInMinutes() < 3.0) return;  //let signal stabilize in first few minutes after boot
 
-	//use signal EMA to check down move, and raw signal to check up move
-	//not using ema to check up move, since if there is signal spike, ema keeps going in that direction for some time even if signal spike is settled giving false tank-filling signal
-    int signal = waterTankFillingInProgress ? round(waterLevelSignalValueEMA) : waterLevelSignalValue;  
+    // when waterTankFillingInProgress=true, ema is made faster, so using rounded value to timely detect filling stop
+    float signal = waterTankFillingInProgress ? round(waterLevelSignalValueEMA) : waterLevelSignalValueEMA;  
     
     if (lastValue < 0) lastValue = signal;   //first time initiation        
 
@@ -139,8 +138,7 @@ void checkIfWaterFillingStarted(){
     print (F(", fc="));
     print (fillCounter);
     print (F(", filling="));
-    print (waterTankFillingInProgress);
-    
+    print (waterTankFillingInProgress);    
     println (F(" "));
     
     lastValue = signal;
