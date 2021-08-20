@@ -3,16 +3,9 @@
 
 String THINGSPEAK_HOST = "api.thingspeak.com";
 String THINGSPEAK_PORT = "80";
-#define THINGSPEAK_API_KEY  "MJQYJZEIGPK7BOWE"   
-#define THINGSPEAK_FIELD_WATER_LEVEL_SIGNAL             "field1"
-#define THINGSPEAK_FIELD_WATER_LEVEL_PERCENTAGE         "field2"
-#define THINGSPEAK_FIELD_WATER_LEVEL_SIGNAL_EMA         "field3"
-#define THINGSPEAK_FIELD_WATER_LEVEL_PERCENTAGE_EMA     "field4"
-#define THINGSPEAK_FIELD_UPTIME                         "field5"
-#define THINGSPEAK_FIELD_API_CALL_FAILURES              "field6"
-#define THINGSPEAK_FIELD_SIGNAL_THRESHOLD_JUMPS_SMALL   "field7"
-#define THINGSPEAK_FIELD_SIGNAL_THRESHOLD_JUMPS_LARGE   "field8"
-
+#define THINGSPEAK_WRITE_API_KEY                        "RJ99UK0DE5N5WRD9"   
+#define THINGSPEAK_FIELD_STRING_DATA                    "field1"
+#define THINGSPEAK_FIELD_SEPARATOR                      "_"
 
 #define TS_START            'a'
 #define TS_AT_CIPMUX        'b'
@@ -101,61 +94,29 @@ void handleFailures(){
   }
 }
 
-void buildDataToSend(){
-   //Not using String data type here, causing memory issues. 
+void buildDataToSend(){  
   char tmp[15];
-  strcpy(dc, "GET /update?api_key=");
-  strcat(dc, THINGSPEAK_API_KEY);
+  char data[100];  //ensure that array size is enough to fit all fields data
+  data[0] = '\0';
   
-  strcat(dc, "&");
-  strcat(dc, THINGSPEAK_FIELD_WATER_LEVEL_SIGNAL);
-  strcat(dc, "=");
-  itoa (waterLevelSignalValue, tmp, 10);
-  strcat(dc, tmp);
+  itoa (waterLevelSignalValue, tmp, 10);                        strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  dtostrf(waterLevelSignalValueEMA, 1, 1, tmp);                 strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  dtostrf(waterLevelPercentage, 1, 1, tmp);                     strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  dtostrf(waterLevelPercentageEMA, 1, 1, tmp);                  strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  itoa (thingSpeakConsecutiveFailureCount, tmp, 10);            strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  itoa (waterLevelSignalThresholdJumpCount_Small, tmp, 10);     strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  itoa (waterLevelSignalThresholdJumpCount_Large, tmp, 10);     strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  dtostrf(getUptimeInMinutes(), 1, 1, tmp);                     strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  strcpy(tmp, waterTankFillingInProgress ? "1" : "0");          strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
 
+  strcpy(dc, "GET /update?api_key=");
+  strcat(dc, THINGSPEAK_WRITE_API_KEY);
   strcat(dc, "&");
-  strcat(dc, THINGSPEAK_FIELD_WATER_LEVEL_PERCENTAGE);
+  strcat(dc, THINGSPEAK_FIELD_STRING_DATA);
   strcat(dc, "=");  
-  dtostrf(waterLevelPercentage, 1, 1, tmp);  
-  strcat(dc, tmp);
+  strcat(dc, data);      
 
-  strcat(dc, "&");
-  strcat(dc, THINGSPEAK_FIELD_API_CALL_FAILURES);
-  strcat(dc, "=");
-  itoa (thingSpeakConsecutiveFailureCount, tmp, 10);
-  strcat(dc, tmp);
-
-  strcat(dc, "&");
-  strcat(dc, THINGSPEAK_FIELD_SIGNAL_THRESHOLD_JUMPS_SMALL);
-  strcat(dc, "=");
-  itoa (waterLevelSignalThresholdJumpCount_Small, tmp, 10);
-  strcat(dc, tmp);
-
-  strcat(dc, "&");
-  strcat(dc, THINGSPEAK_FIELD_SIGNAL_THRESHOLD_JUMPS_LARGE);
-  strcat(dc, "=");
-  itoa (waterLevelSignalThresholdJumpCount_Large, tmp, 10);
-  strcat(dc, tmp);  
-
-  strcat(dc, "&");
-  strcat(dc, THINGSPEAK_FIELD_WATER_LEVEL_SIGNAL_EMA);
-  strcat(dc, "=");
-  dtostrf(waterLevelSignalValueEMA, 1, 1, tmp);  
-  strcat(dc, tmp);
-
-  strcat(dc, "&");
-  strcat(dc, THINGSPEAK_FIELD_WATER_LEVEL_PERCENTAGE_EMA);
-  strcat(dc, "=");
-  dtostrf(waterLevelPercentageEMA, 1, 1, tmp);  
-  strcat(dc, tmp);
-
-  strcat(dc, "&");
-  strcat(dc, THINGSPEAK_FIELD_UPTIME);
-  strcat(dc, "=");
-  dtostrf(getUptimeInMinutes(), 1, 1, tmp);  
-  strcat(dc, tmp); 
-
-  //println(dc);
+  //println(dc, true);
 }
 
 
