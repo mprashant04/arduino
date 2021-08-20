@@ -100,8 +100,7 @@ void timerHandler_waterLevelRead(){
 }
 
 void checkIfWaterFillingStarted(){
-    static float lastValue = -1;
-    static char fillCounter = 0;
+    static float lastValue = -1;    
     
     if (waterLevelReadingCount % TANK_FILL_CHECK_READING_FREQUENCY != 0) return;
     if (getUptimeInMinutes() < 3.0) return;  //let signal stabilize in first few minutes after boot
@@ -112,21 +111,21 @@ void checkIfWaterFillingStarted(){
     if (lastValue < 0) lastValue = signal;   //first time initiation        
 
     if (signal > lastValue + 0){
-        fillCounter++;
-        if (fillCounter >= TANK_FILL_CHECKS_UP && !waterTankFillingInProgress){  //water tank filling has started....
+        waterTankFillCounter++;
+        if (waterTankFillCounter >= TANK_FILL_CHECKS_UP && !waterTankFillingInProgress){  //water tank filling has started....
             waterTankFillingInProgress = true;
-            fillCounter = TANK_FILL_CHECKS_DOWN;
+            waterTankFillCounter = TANK_FILL_CHECKS_DOWN;
         }        
     }
     else{
-        fillCounter--;
-        if (fillCounter <= 0){  //water tank filling stopped
+        waterTankFillCounter--;
+        if (waterTankFillCounter <= 0){  //water tank filling stopped
             waterTankFillingInProgress = false;            
         }
     }
 
-    if (fillCounter > TANK_FILL_CHECKS_DOWN)  fillCounter = TANK_FILL_CHECKS_DOWN;
-    if (fillCounter < 0)                      fillCounter = 0;
+    if (waterTankFillCounter > TANK_FILL_CHECKS_DOWN)  waterTankFillCounter = TANK_FILL_CHECKS_DOWN;
+    if (waterTankFillCounter < 0)                      waterTankFillCounter = 0;
         
 
     print (F("*** rc="));
@@ -136,7 +135,7 @@ void checkIfWaterFillingStarted(){
     print (F(", sig="));
     print (signal);
     print (F(", fc="));
-    print (fillCounter);
+    print (waterTankFillCounter);
     print (F(", filling="));
     print (waterTankFillingInProgress);    
     println (F(" "));

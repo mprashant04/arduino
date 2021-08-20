@@ -108,6 +108,8 @@ void buildDataToSend(){
   itoa (waterLevelSignalThresholdJumpCount_Large, tmp, 10);     strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
   dtostrf(getUptimeInMinutes(), 1, 1, tmp);                     strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
   strcpy(tmp, waterTankFillingInProgress ? "1" : "0");          strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  itoa (waterTankFillCounter, tmp, 10);                         strcat (data, tmp);   strcat (data, THINGSPEAK_FIELD_SEPARATOR);
+  
 
   strcpy(dc, "GET /update?api_key=");
   strcat(dc, THINGSPEAK_WRITE_API_KEY);
