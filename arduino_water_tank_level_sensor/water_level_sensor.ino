@@ -7,8 +7,8 @@
 
 #define   WATER_ALERT_LEVEL_H1                              90      //main tank about to get full
 #define   WATER_ALERT_LEVEL_H2                              102     //solar tank full, overfill detected in main tank
-#define   WATER_ALERT_LEVEL_L1                              30      //main tank about to go empty
-#define   WATER_ALERT_LEVEL_L2                              15      //main tank about to go empty
+#define   WATER_ALERT_LEVEL_L1                              20      //main tank about to go empty
+#define   WATER_ALERT_LEVEL_L2                              10      //main tank about to go empty
 #define   WATER_ALERT_LEVEL_CROSS_THRESHOLD                 1
 #define   WATER_ALERT_TONE_COUNT                            300     //5 minutes, assuming each tone duration = 1 sec in code below
 
