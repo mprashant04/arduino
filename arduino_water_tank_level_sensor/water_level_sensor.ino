@@ -3,10 +3,10 @@
 //Calibrate these values as per pot signal value at min & max water level, notes maintained in google drive doc. Keep 5-8 points margin above acrual full/empty pot readings
 // Signal value set ~750 on extreme top when rope touch tank inside top and max out. I.e. value won't go beyond that. (29 aug 2021)
 #define   WATER_SIGNAL_MIN                                  260
-#define   WATER_SIGNAL_MAX                                  720
+#define   WATER_SIGNAL_MAX                                  735
 
 #define   WATER_ALERT_LEVEL_H1                              90      //main tank about to get full
-#define   WATER_ALERT_LEVEL_H2                              102     //solar tank full, overfill detected in main tank
+#define   WATER_ALERT_LEVEL_H2                              100     //solar tank full, overfill detected in main tank
 #define   WATER_ALERT_LEVEL_L1                              20      //main tank about to go empty
 #define   WATER_ALERT_LEVEL_L2                              10      //main tank about to go empty
 #define   WATER_ALERT_LEVEL_CROSS_THRESHOLD                 1
